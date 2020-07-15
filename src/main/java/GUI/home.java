@@ -36,8 +36,8 @@ public class home extends JFrame {
 	private JTextField txtCPF;
 	private JTextField txtCodCliente;
 	private JTextField txtNomeCliente;
-	private JTextField txtLogradouro;
-	private JTextField textField_3;
+	private JTextField txtLogradouroCliente;
+	private JTextField txtDataNascimentoCliente;
 	private JTextField txtCidadeCliente;
 	private JTextField txtCPFCliente;
 	private JTextField txtBairroCliente;
@@ -66,7 +66,7 @@ public class home extends JFrame {
 	 */
 	public home() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1020, 794);
+		setBounds(100, 100, 1320, 854);
 		txtNome = new JPanel();
 		txtNome.setBackground(new Color(211, 211, 211));
 		txtNome.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -118,7 +118,7 @@ public class home extends JFrame {
 		reserva.add(lblDepositoentrada);
 		
 		txtDeposito = new JTextField();
-		txtDeposito.setBounds(211, 130, 191, 20);
+		txtDeposito.setBounds(211, 130, 191, 20); 
 		reserva.add(txtDeposito);
 		txtDeposito.setColumns(10);
 		
@@ -156,7 +156,7 @@ public class home extends JFrame {
 				   if(dao.inserir(obj)==1){
 			    	   JOptionPane.showConfirmDialog(reserva, "Cadastrado com sucesso");
 			       } else {
-			    	   JOptionPane.showConfirmDialog(reserva, "Deu bosta");
+			    	   JOptionPane.showConfirmDialog(reserva, "ERROR");
 			       }
 			}
 		});
@@ -192,7 +192,7 @@ public class home extends JFrame {
 		
 		JPanel cliente = new JPanel();
 		cliente.setBackground(new Color(211, 211, 211));
-		cliente.setBounds(140, 418, 564, 407);
+		cliente.setBounds(150, 408, 564, 407);
 		txtNome.add(cliente);
 		cliente.setLayout(null);
 		
@@ -218,19 +218,19 @@ public class home extends JFrame {
 		lblLogradouro.setBounds(10, 161, 134, 14);
 		cliente.add(lblLogradouro);
 		
-		txtLogradouro = new JTextField();
-		txtLogradouro.setColumns(10);
-		txtLogradouro.setBounds(10, 183, 191, 20);
-		cliente.add(txtLogradouro);
+		txtLogradouroCliente = new JTextField();
+		txtLogradouroCliente.setColumns(10);
+		txtLogradouroCliente.setBounds(10, 183, 191, 20);
+		cliente.add(txtLogradouroCliente);
 		
 		JLabel lblDataDeNascimento = new JLabel("Data de Nascimento");
 		lblDataDeNascimento.setBounds(211, 108, 134, 14);
 		cliente.add(lblDataDeNascimento);
 		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		textField_3.setBounds(211, 130, 191, 20);
-		cliente.add(textField_3);
+		txtDataNascimentoCliente = new JTextField();
+		txtDataNascimentoCliente.setColumns(10);
+		txtDataNascimentoCliente.setBounds(211, 130, 191, 20);
+		cliente.add(txtDataNascimentoCliente);
 		
 		JLabel lblCidade = new JLabel("Cidade");
 		lblCidade.setBounds(211, 161, 134, 14);
@@ -243,8 +243,27 @@ public class home extends JFrame {
 		
 		JButton btnCadastrarCliente = new JButton("Cadastrar Cliente");
 		btnCadastrarCliente.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {	
 				
+				Cliente obj = new Cliente();
+				obj.setCodigo(Long.parseLong(txtCodCliente.getText()));
+				obj.setNome(txtNomeCliente.getText());
+				obj.setCpf(Integer.parseInt(txtCPFCliente.getText()));
+				obj.setDataNascimento(txtDataNascimentoCliente.getText());
+				obj.setLogradouro(txtLogradouroCliente.getText());
+				obj.setBairro(txtBairroCliente.getText());
+				obj.setCidade(txtCidadeCliente.getText());
+				obj.setEstado(txtEstadoCliente.getText());
+				obj.setTelefone(txtTelefoneCliente.getText());
+				obj.setCep(Integer.parseInt(txtCEPCliente.getText()));				
+				
+				
+				ClienteDAO dao = new ClienteDAO();
+				   if(dao.inserir(obj)==1){
+			    	   JOptionPane.showConfirmDialog(cliente, "Cadastrado com sucesso");
+			       } else {
+			    	   JOptionPane.showConfirmDialog(cliente, "ERROR");
+			       }
 			}
 		});
 		btnCadastrarCliente.setBounds(412, 90, 134, 23);

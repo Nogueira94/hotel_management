@@ -13,9 +13,9 @@ public class ReservaDAO {
 	private SQLite_connection conexao = new SQLite_connection();
 
     public ReservaDAO(){
-        String sql = "create table if not exists reserva ( )" +
+        String sql = "create table if not exists reserva (" +
                 "codigo int, dtEntr DATE, dtSaida DATE, cliente varchar(100), " +
-                "deposito float, quarto int";
+                "deposito float, quarto int)";
 
         try{
             if(this.conexao.conectar()){

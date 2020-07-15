@@ -14,10 +14,10 @@ public class ClienteDAO {
     private SQLite_connection conexao = new SQLite_connection();
 
     public ClienteDAO(){
-        String sql = "create table if not exists cliente ( )" +
-                "codigo long, nome varchar(100), cpf int(11), dataNascimento varchar(20), " +
-                "logradouro varchar(50), bairro varchar(20), cidade varchar(50), estado varchar(2)" +
-                "telefone varchar(15), cep int(10)";
+        String sql = "create table if not exists cliente (" +
+                "codigo long, nome varchar(100), cpf int, dataNascimento varchar(20), " +
+                "logradouro varchar(50), bairro varchar(20), cidade varchar(50), estado varchar(2)," +
+                "telefone varchar(15), cep int)";
 
         try{
             if(this.conexao.conectar()){
