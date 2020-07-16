@@ -84,12 +84,45 @@ public class QuartoDAO {
     }
 
     public int alterar (Quarto obj){
-		return 0;
+    	int cont = 0;
+        try{
+            if(conexao.conectar()){
+                String sql = "update quarto set numero=?,descritivo=?,valorDiaria=?, disponibilidade=1 where numero=?";
+                PreparedStatement stmt = conexao.prepareStatement(sql);
+                stmt.setLong(1, obj.getNumero());
+                stmt.setString(2, obj.getDescritivo());
+                stmt.setDouble(3, obj.getValorDiaria());
+                stmt.setLong(4, obj.getNumero());
+                cont = stmt.executeUpdate();
+            }
+        } 
+        catch(SQLException err){
+            System.err.println(err.getMessage());
+        }
+        finally{
+            conexao.desconectar();
+            return cont;
+        }
 
     }
 
-    public int remover (Quarto obj){
-		return 0;
+    public int remover (int numero){    	
+    	int cont = 0;
+        try{
+            if(conexao.conectar()){
+                String sql = "delete from quarto where numero=?";
+                PreparedStatement stmt = conexao.prepareStatement(sql);
+                stmt.setInt(1, numero);
+                cont = stmt.executeUpdate();
+            }
+        } 
+        catch(SQLException err){
+            System.err.println(err.getMessage());
+        }
+        finally{
+            conexao.desconectar();
+            return cont;
+        }
 
     }
 

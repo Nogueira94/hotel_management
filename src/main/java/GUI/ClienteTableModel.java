@@ -5,12 +5,13 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import fatec.hotel.Quarto;
+import fatec.hotel.Cliente;
 
-public class QuartoTableModel extends AbstractTableModel {
+
+public class ClienteTableModel extends AbstractTableModel {
 	
-	private List<Quarto> dados = new ArrayList<Quarto>();
-    private String[] colunas = {"numero","descritivo","disponibilidade","valorDiaria"};
+	private List<Cliente> dados = new ArrayList<Cliente>();
+    private String[] colunas = {"codigo","nome","cpf","telefone"};
 	@Override
     public int getRowCount() {
         return getDados().size();
@@ -23,10 +24,10 @@ public class QuartoTableModel extends AbstractTableModel {
 	@Override
 	public Object getValueAt(int linha, int coluna) {
 		switch(coluna){
-        case 0: return this.dados.get(linha).getNumero();
-        case 1: return this.dados.get(linha).getDescritivo();
-        case 2: return this.dados.get(linha).isDisponibilidae();
-        case 3: return this.dados.get(linha).getValorDiaria();
+        case 0: return this.dados.get(linha).getCodigo();
+        case 1: return this.dados.get(linha).getNome();
+        case 2: return this.dados.get(linha).getCpf();
+        case 3: return this.dados.get(linha).getTelefone();
         default: return null;
 		}		
 	}
@@ -34,10 +35,10 @@ public class QuartoTableModel extends AbstractTableModel {
     public String getColumnName(int coluna) {
         return getColunas()[coluna];
     }
-    public List<Quarto> getDados() {
+    public List<Cliente> getDados() {
         return dados;
     }
-    public void setDados(List<Quarto> dados) {
+    public void setDados(List<Cliente> dados) {
         this.dados = dados;
     }
     public String[] getColunas() {
@@ -46,8 +47,7 @@ public class QuartoTableModel extends AbstractTableModel {
     public void setColunas(String[] colunas) {
         this.colunas = colunas;
     }
-    public Quarto retornaObjeto(int linha){
+    public Cliente retornaObjeto(int linha){
         return dados.get(linha);
     }
-	
 }

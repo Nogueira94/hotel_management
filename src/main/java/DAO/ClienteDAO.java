@@ -64,12 +64,53 @@ public class ClienteDAO {
     }
 
     public int alterar (Cliente obj){
-		return 0;
+    	int cont = 0;
+        try{
+            if(conexao.conectar()){
+                String sql = "update cliente set codigo=?, nome=?, cpf=?, dataNascimento=?, logradouro=?, bairro=?, cidade=?, estado=?, telefone=?, cep=? where cpf=?";
+                PreparedStatement stmt = conexao.prepareStatement(sql);
+                stmt.setLong(1, obj.getCodigo());
+                stmt.setString(2, obj.getNome());                
+                stmt.setInt(3, obj.getCpf());    
+                stmt.setString(4, obj.getDataNascimento());   
+                stmt.setString(5, obj.getLogradouro()); 
+                stmt.setString(6, obj.getBairro());
+                stmt.setString(7, obj.getCidade()); 
+                stmt.setString(8, obj.getEstado());    
+                stmt.setString(9, obj.getTelefone()); 
+                stmt.setInt(10, obj.getCep());
+                stmt.setInt(3, obj.getCpf()); 
+                cont = stmt.executeUpdate();
+            }
+        } 
+        catch(SQLException err){
+            System.err.println(err.getMessage());
+        }
+        finally{
+            conexao.desconectar();
+            return cont;
+        }
+
 
     }
 
-    public int remover (Cliente obj){
-		return 0;
+    public int remover (int cpf){
+    	int cont = 0;
+        try{
+            if(conexao.conectar()){
+                String sql = "delete from cliente where cpf=?";
+                PreparedStatement stmt = conexao.prepareStatement(sql);
+                stmt.setInt(1, cpf);
+                cont = stmt.executeUpdate();
+            }
+        } 
+        catch(SQLException err){
+            System.err.println(err.getMessage());
+        }
+        finally{
+            conexao.desconectar();
+            return cont;
+        }
 
     }
 
@@ -107,7 +148,44 @@ public class ClienteDAO {
 
     public List<Cliente> returnList(String search){
         List<Cliente> list = new ArrayList<Cliente>();
-		return list;
+        try{
+            if(conexao.conectar()){
+                PreparedStatement stmt;
+                if(search.length() > 0){          
+                    stmt = conexao.prepareStatement("select *  from cliente "
+                            + "where cpf like ? order by cpf");
+                    stmt.setString(1, "%"+ search + "%");
+                } else {
+                    stmt = conexao.prepareStatement("select *  from cliente "
+                            + "order by cpf");
+                }
+                ResultSet resultado = stmt.executeQuery();
+                while(resultado.next()){
+                	Cliente obj = new Cliente();
+                	obj.setCodigo(resultado.getLong("codigo"));
+                	obj.setNome(resultado.getString("nome"));
+                	obj.setCpf(resultado.getInt("cpf"));
+                	obj.setDataNascimento(resultado.getString("dataNascimento"));
+                	obj.setLogradouro(resultado.getString("logradouro"));
+                	obj.setBairro(resultado.getString("bairro"));
+                	obj.setCidade(resultado.getString("cidade"));
+                	obj.setEstado(resultado.getString("estado"));
+                	obj.setTelefone(resultado.getString("telefone"));
+                	obj.setCep(resultado.getInt("cep"));                	     
+                    list.add(obj);
+                }
+            }
+        } 
+        catch(SQLException err){
+         System.err.println(err.getMessage());
+        }
+        catch(Exception e){
+            System.err.println(e.getMessage());
+        }
+        finally{
+            conexao.desconectar();
+            return list;
+        }	
     }
 
 }

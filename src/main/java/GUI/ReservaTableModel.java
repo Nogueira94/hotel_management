@@ -5,12 +5,12 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import fatec.hotel.Quarto;
 
-public class QuartoTableModel extends AbstractTableModel {
-	
-	private List<Quarto> dados = new ArrayList<Quarto>();
-    private String[] colunas = {"numero","descritivo","disponibilidade","valorDiaria"};
+import fatec.hotel.Reserva;
+
+public class ReservaTableModel extends AbstractTableModel {
+	private List<Reserva> dados = new ArrayList<Reserva>();
+    private String[] colunas = {"codigo","dtEntr","dtSaida","cliente","deposito","quarto"};
 	@Override
     public int getRowCount() {
         return getDados().size();
@@ -23,10 +23,12 @@ public class QuartoTableModel extends AbstractTableModel {
 	@Override
 	public Object getValueAt(int linha, int coluna) {
 		switch(coluna){
-        case 0: return this.dados.get(linha).getNumero();
-        case 1: return this.dados.get(linha).getDescritivo();
-        case 2: return this.dados.get(linha).isDisponibilidae();
-        case 3: return this.dados.get(linha).getValorDiaria();
+        case 0: return this.dados.get(linha).getCodigo();
+        case 1: return this.dados.get(linha).getDataEntrada();
+        case 2: return this.dados.get(linha).getDataSaida();
+        case 3: return this.dados.get(linha).getCliente().getCpf();
+        case 4: return this.dados.get(linha).getDeposito();
+        case 5: return this.dados.get(linha).getQuarto().getNumero();        
         default: return null;
 		}		
 	}
@@ -34,10 +36,10 @@ public class QuartoTableModel extends AbstractTableModel {
     public String getColumnName(int coluna) {
         return getColunas()[coluna];
     }
-    public List<Quarto> getDados() {
+    public List<Reserva> getDados() {
         return dados;
     }
-    public void setDados(List<Quarto> dados) {
+    public void setDados(List<Reserva> dados) {
         this.dados = dados;
     }
     public String[] getColunas() {
@@ -46,8 +48,7 @@ public class QuartoTableModel extends AbstractTableModel {
     public void setColunas(String[] colunas) {
         this.colunas = colunas;
     }
-    public Quarto retornaObjeto(int linha){
+    public Reserva retornaObjeto(int linha){
         return dados.get(linha);
     }
-	
 }

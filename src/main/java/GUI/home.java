@@ -34,8 +34,11 @@ import java.awt.event.MouseEvent;
 
 public class home extends JFrame {
 	
+	//////////////////////////////////////////////// CRIANDO OS MODELS PARA LISTAS //////////////////////////////////////////
 	
 	QuartoTableModel modeloQuarto = new QuartoTableModel();
+	ClienteTableModel modeloCliente = new ClienteTableModel();
+	ReservaTableModel modeloReserva = new ReservaTableModel();
 	
 	private void carregarListaQuarto() {			
 		String busca = txtNumQuarto.getText();
@@ -48,6 +51,32 @@ public class home extends JFrame {
 		}			
 		tableQuarto.setModel(modeloQuarto);
 	}
+	
+	private void carregarListaCliente() {			
+		String busca = txtCPFCliente.getText();
+		ClienteDAO dao = new ClienteDAO();
+		List<Cliente> lista =dao.returnList("");
+		modeloCliente.setDados(lista);
+		if (busca != "") {
+			List<Cliente> lista2 =dao.returnList(busca);
+			modeloCliente.setDados(lista2);
+		}			
+		tableCliente.setModel(modeloCliente);
+	}
+	
+	private void carregarListaReserva() {			
+		String busca = txtCodigo.getText();
+		ReservaDAO dao = new ReservaDAO();
+		List<Reserva> lista =dao.returnList("");
+		modeloReserva.setDados(lista);
+		if (busca != "") {
+			List<Reserva> lista2 =dao.returnList(busca);
+			modeloReserva.setDados(lista2);
+		}			
+		tableReserva.setModel(modeloReserva);
+	}
+	
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	private JPanel txtNome;
 	private JTextField txtCodigo;
@@ -70,6 +99,8 @@ public class home extends JFrame {
 	private JTextField txtValorQuarto;
 	private JTextField txtDescricaoQuarto;
 	private JTable tableQuarto;
+	private JTable tableReserva;
+	private JTable tableCliente;
 
 	/**
 	 * Launch the application.
@@ -187,6 +218,12 @@ public class home extends JFrame {
 		cliente.add(lblCadastroDeCliente);
 		
 		JButton btnBuscarCliente = new JButton("Buscar Cliente");
+		btnBuscarCliente.addMouseListener(new MouseAdapter() {			
+			public void mouseClicked(MouseEvent arg0) {			
+				tableCliente.repaint();
+				carregarListaCliente();
+			}
+		});
 		btnBuscarCliente.setBounds(412, 117, 134, 23);
 		cliente.add(btnBuscarCliente);
 		
@@ -242,6 +279,10 @@ public class home extends JFrame {
 		txtTelefoneCliente.setColumns(10);
 		txtTelefoneCliente.setBounds(211, 289, 191, 20);
 		cliente.add(txtTelefoneCliente);
+		
+		tableCliente = new JTable();
+		tableCliente.setBounds(10, 317, 498, 79);
+		cliente.add(tableCliente);
 		
 		JPanel menu = new JPanel();
 		menu.setBackground(new Color(102, 102, 255));
@@ -348,6 +389,12 @@ public class home extends JFrame {
 		reserva.add(lblNewLabel);
 		
 		JButton btnBuscarReserva = new JButton("Buscar Reserva");
+		btnBuscarReserva.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				tableReserva.repaint();
+				carregarListaReserva();
+			}
+		});
 		btnBuscarReserva.setBounds(412, 117, 134, 23);
 		reserva.add(btnBuscarReserva);
 		
@@ -368,36 +415,15 @@ public class home extends JFrame {
 		btnExcluirReserva.setBounds(412, 170, 134, 23);
 		reserva.add(btnExcluirReserva);		
 		
+		tableReserva = new JTable();
+		tableReserva.setBounds(10, 214, 532, 182);
+		reserva.add(tableReserva);
 		
-		/////////////////////////////BOTÕES DO MENU
-		
-		JButton btnCallCliente = new JButton("Cliente");
-		btnCallCliente.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				reserva.setVisible(false);
-				cliente.setVisible(true);
-			}
-		});
-		btnCallCliente.setBounds(10, 108, 121, 23);
-		menu.add(btnCallCliente);
-		
-		JButton btnCallReserva = new JButton("Reserva");
-		btnCallReserva.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				reserva.setVisible(true);
-				cliente.setVisible(false);
-			}
-		});
-		btnCallReserva.setBounds(10, 69, 121, 23);
-		menu.add(btnCallReserva);
-		
-		
-		////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		JPanel quarto = new JPanel();
 		quarto.setLayout(null);
 		quarto.setBackground(new Color(211, 211, 211));
-		quarto.setBounds(727, 0, 554, 407);
+		quarto.setBounds(140, 0, 564, 407);
 		txtNome.add(quarto);
 		
 		JLabel lblCdigoDoQuarto = new JLabel("Numero do Quarto");
@@ -464,15 +490,81 @@ public class home extends JFrame {
 		quarto.add(lblDescriaDoQuarto);
 		
 		JButton btnAlterarQuarto = new JButton("Alterar Quarto");
+		btnAlterarQuarto.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Quarto obj = new Quarto();
+				obj.setNumero(Long.parseLong(txtNumQuarto.getText()));
+				obj.setDescritivo(txtDescricaoQuarto.getText());
+				obj.setDisponibilidae(true);
+				obj.setValorDiaria(Double.parseDouble(txtValorQuarto.getText()));
+				
+				QuartoDAO dao = new QuartoDAO();
+				   if(dao.alterar(obj)>0){
+			    	   JOptionPane.showMessageDialog(cliente, "Quarto alterado com sucesso");
+			       } else {
+			    	   JOptionPane.showMessageDialog(cliente, "ERROR");
+			       }
+			}
+		});
 		btnAlterarQuarto.setBounds(412, 129, 134, 23);
 		quarto.add(btnAlterarQuarto);
 		
 		JButton btnExcluirQuarto = new JButton("Excluir Quarto");
+		btnExcluirQuarto.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int numero = Integer.parseInt(txtNumQuarto.getText());
+				QuartoDAO dao = new QuartoDAO();				
+				if (dao.remover(numero) > 0) {
+					JOptionPane.showMessageDialog(cliente, "Quarto removido com sucesso");
+				} else {
+					JOptionPane.showMessageDialog(cliente, "Quarto não alterado");
+				}
+			}
+		});
 		btnExcluirQuarto.setBounds(412, 157, 134, 23);
 		quarto.add(btnExcluirQuarto);
 		
 		tableQuarto = new JTable();
 		tableQuarto.setBounds(29, 209, 498, 187);
 		quarto.add(tableQuarto);
+		
+		/////////////////////////////BOTÕES DO MENU//////////////////////////////////////////////////////////
+				
+				
+		JButton btnCallCliente = new JButton("Cliente");
+		btnCallCliente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				reserva.setVisible(false);
+				quarto.setVisible(false);
+				cliente.setVisible(true);
+			}
+		});
+		btnCallCliente.setBounds(10, 78, 121, 23);
+		menu.add(btnCallCliente);
+		
+		JButton btnCallReserva = new JButton("Reserva");
+		btnCallReserva.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				reserva.setVisible(true);
+				quarto.setVisible(false);
+				cliente.setVisible(false);
+			}
+		});
+		btnCallReserva.setBounds(10, 112, 121, 23);
+		menu.add(btnCallReserva);
+		
+		JButton btnCallQuartos = new JButton("Quartos");
+		btnCallQuartos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				reserva.setVisible(false);
+				quarto.setVisible(true);
+				cliente.setVisible(false);
+			}
+		});
+		btnCallQuartos.setBounds(10, 146, 121, 23);
+		menu.add(btnCallQuartos);
+		
+		
+		////////////////////////////////////////////////////////////////////////////////////////////////////
 	}
 }
