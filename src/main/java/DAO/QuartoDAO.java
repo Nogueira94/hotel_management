@@ -107,6 +107,68 @@ public class QuartoDAO {
         }
     	
     }
+    
+    public Quarto getQuartoNum (int quarto) {
+    	Quarto obj = new Quarto();    	        
+    	try{
+            if(conexao.conectar()){
+                String sql = "select *  from quarto where numero=?";
+                PreparedStatement stmt = conexao.prepareStatement(sql);
+                stmt.setInt(1, quarto);
+                ResultSet resultado = stmt.executeQuery();
+                if(! resultado.isClosed()){
+                	obj.setNumero(resultado.getLong("numero"));
+                	obj.setDescritivo(resultado.getString("descritivo"));
+                	obj.setValorDiaria(resultado.getDouble("valorDiaria"));
+                	obj.setDisponibilidae(resultado.getBoolean("disponibilidade"));
+                }
+                
+                return obj;
+            } else {
+            	return obj;
+            }
+        } 
+        catch(SQLException err){
+            System.err.println(err.getMessage());
+            return obj;
+        }
+        finally{
+            conexao.desconectar();       
+            
+        }
+    	
+    }
+          
+    public Double getValor (int quarto) {
+    	Quarto obj = new Quarto();    	        
+    	try{
+            if(conexao.conectar()){
+                String sql = "select *  from quarto where numero=?";
+                PreparedStatement stmt = conexao.prepareStatement(sql);
+                stmt.setInt(1, quarto);
+                ResultSet resultado = stmt.executeQuery();
+                if(! resultado.isClosed()){
+                	obj.setNumero(resultado.getLong("numero"));
+                	obj.setDescritivo(resultado.getString("descritivo"));
+                	obj.setValorDiaria(resultado.getDouble("valorDiaria"));
+                	obj.setDisponibilidae(resultado.getBoolean("disponibilidade"));
+                }
+                
+                return obj.getValorDiaria();
+            } else {
+            	return null;
+            }
+        } 
+        catch(SQLException err){
+            System.err.println(err.getMessage());
+            return null;
+        }
+        finally{
+            conexao.desconectar();       
+            
+        }
+    	
+    }
 
     public int alterar (Quarto obj){
     	int cont = 0;
@@ -150,11 +212,7 @@ public class QuartoDAO {
         }
 
     }
-
-    public Quarto pesquisar(int codigo){
-		return null;
-
-    }        
+         
 
     public List<Quarto> returnList(String search){
         List<Quarto> list = new ArrayList<Quarto>();        
@@ -191,4 +249,10 @@ public class QuartoDAO {
             return list;
         }		
     }
+
+
+	public Quarto pesquisar(int int1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

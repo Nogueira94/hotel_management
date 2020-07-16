@@ -120,6 +120,7 @@ public class home extends JFrame {
 	private JTextField txtValorTotalDiarias;
 	private JTextField txtValorTotalServico;
 	private JTextField txtValorTotalReserva;
+	private JTextField txtNumQuartoFinal;
 
 	/**
 	 * Launch the application.
@@ -144,7 +145,7 @@ public class home extends JFrame {
 		setTitle("HOTEL ALABAMA");		
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1320, 854);
+		setBounds(100, 100, 710, 441);
 		txtNome = new JPanel();
 		txtNome.setBackground(new Color(211, 211, 211));
 		txtNome.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -443,6 +444,9 @@ public class home extends JFrame {
 				int codigo = Integer.parseInt(txtCodigo.getText());
 				ReservaDAO dao = new ReservaDAO();
 				if (dao.remover(codigo) > 0) {
+					Quarto q = new QuartoDAO().isDisponivel(Integer.parseInt(txtQuarto.getText()));					
+					QuartoDAO disp = new QuartoDAO();
+				    disp.changeDisponibilidade(q);					
 					JOptionPane.showMessageDialog(cliente, "Reserva removida com sucesso");
 				} else {
 					JOptionPane.showMessageDialog(cliente, "Reserva não alterado");
@@ -676,7 +680,7 @@ public class home extends JFrame {
 		JPanel finalizar = new JPanel();
 		finalizar.setLayout(null);
 		finalizar.setBackground(new Color(211, 211, 211));
-		finalizar.setBounds(656, 418, 564, 407);
+		finalizar.setBounds(140, 0, 564, 407);
 		txtNome.add(finalizar);
 		
 		JLabel lblCodCliente_1 = new JLabel("Código da Reserva");
@@ -685,16 +689,30 @@ public class home extends JFrame {
 		
 		textCodReservaFinal = new JTextField();
 		textCodReservaFinal.setColumns(10);
-		textCodReservaFinal.setBounds(10, 77, 191, 20);
+		textCodReservaFinal.setBounds(10, 77, 102, 20);
 		finalizar.add(textCodReservaFinal);
 		
 		JButton btnBuscarReservaFinal = new JButton("Buscar Reserva");
 		btnBuscarReservaFinal.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//busca reserva
+				Double total;
+				ReservaDAO dao = new ReservaDAO();
+				dao.getReserva(Integer.parseInt(textCodReservaFinal.getText()));
+				//txtValorTotalDiarias.setText(dao.getReserva(Integer.parseInt(textCodReservaFinal.getText())));	
+				QuartoDAO qdao = new QuartoDAO();
+				qdao.getValor(Integer.parseInt(txtNumQuartoFinal.getText()));
+				
+				total = qdao.getValor(Integer.parseInt(txtNumQuartoFinal.getText())) * dao.getReserva(Integer.parseInt(textCodReservaFinal.getText()) );
+				
+				if (total >0) {
+					txtValorTotalDiarias.setText(""+total);
+				} else {
+					JOptionPane.showMessageDialog(reserva, "Reserva Não Encontrada");
+				}
+				
 			}
 		});
-		btnBuscarReservaFinal.setBounds(211, 76, 134, 23);
+		btnBuscarReservaFinal.setBounds(238, 76, 134, 23);
 		finalizar.add(btnBuscarReservaFinal);
 		
 		JLabel lblFecharReserva = new JLabel("Fechar Reserva");
@@ -703,10 +721,36 @@ public class home extends JFrame {
 		finalizar.add(lblFecharReserva);
 		
 		JButton btnAdicionarServicoFinal = new JButton("Adicionar Serviço");
-		btnAdicionarServicoFinal.setBounds(211, 132, 134, 23);
+		btnAdicionarServicoFinal.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {				
+				ServicoDAO dao = new ServicoDAO();
+				dao.valorTotalServico(Integer.parseInt(textInserirServicoFInal.getText()));
+				double total;
+				//total = dao.valorTotalServico(Integer.parseInt(textInserirServicoFInal.getText()));
+				total = Double.parseDouble(txtValorTotalServico.getText()) + dao.valorTotalServico(Integer.parseInt(textInserirServicoFInal.getText()));
+				
+				if (total >0) {
+					txtValorTotalServico.setText(""+total);
+				} else {
+					JOptionPane.showMessageDialog(reserva, "Servico Não Encontrado");
+				}				
+			}
+		});
+		btnAdicionarServicoFinal.setBounds(238, 132, 134, 23);
 		finalizar.add(btnAdicionarServicoFinal);
 		
 		JButton btnFinalizarReserva = new JButton("Finalizar Reserva");
+		btnFinalizarReserva.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				double total;
+				ReservaDAO dao = new ReservaDAO();								
+				double deposito;
+				deposito = dao.getDeposito(Integer.parseInt(textCodReservaFinal.getText()));
+				total = (Double.parseDouble(txtValorTotalServico.getText()) + Double.parseDouble(txtValorTotalDiarias.getText())) - deposito; 
+				txtValorTotalReserva.setText(""+total);
+				
+			}
+		});
 		btnFinalizarReserva.setBounds(406, 77, 134, 78);
 		finalizar.add(btnFinalizarReserva);
 		
@@ -727,8 +771,9 @@ public class home extends JFrame {
 		lblNewLabel_1_1.setBounds(117, 175, 84, 14);
 		finalizar.add(lblNewLabel_1_1);
 		
-		JLabel lblNewLabel_1_2 = new JLabel("Valor Total");
-		lblNewLabel_1_2.setBounds(221, 175, 84, 14);
+		JLabel lblNewLabel_1_2 = new JLabel("Valor Total a Pagar");
+		lblNewLabel_1_2.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		lblNewLabel_1_2.setBounds(267, 175, 235, 37);
 		finalizar.add(lblNewLabel_1_2);
 		
 		txtValorTotalDiarias = new JTextField();
@@ -744,10 +789,39 @@ public class home extends JFrame {
 		finalizar.add(txtValorTotalServico);
 		
 		txtValorTotalReserva = new JTextField();
+		txtValorTotalReserva.setFont(new Font("Tahoma", Font.PLAIN, 30));
 		txtValorTotalReserva.setEditable(false);
 		txtValorTotalReserva.setColumns(10);
-		txtValorTotalReserva.setBounds(221, 192, 84, 20);
+		txtValorTotalReserva.setBounds(277, 223, 191, 31);
 		finalizar.add(txtValorTotalReserva);
+		
+		JLabel lblCodCliente_1_2 = new JLabel("Numero Do Quarto");
+		lblCodCliente_1_2.setBounds(117, 55, 134, 14);
+		finalizar.add(lblCodCliente_1_2);
+		
+		txtNumQuartoFinal = new JTextField();
+		txtNumQuartoFinal.setColumns(10);
+		txtNumQuartoFinal.setBounds(117, 77, 102, 20);
+		finalizar.add(txtNumQuartoFinal);
+		
+		JButton btnPagarConta = new JButton("Pagar Conta");
+		btnPagarConta.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//deletar resera e mudar disponibiliade do quarto
+				
+				int codigo = Integer.parseInt(txtCodigo.getText());
+				ReservaDAO dao = new ReservaDAO();
+				if (dao.remover(codigo) > 0) {
+					Quarto q = new QuartoDAO().isDisponivel(Integer.parseInt(txtQuarto.getText()));
+					QuartoDAO disp = new QuartoDAO();
+			    	disp.changeDisponibilidade(q);
+				} else {
+					JOptionPane.showMessageDialog(cliente, "ERRO AO PAGAR CONTA");
+				}
+			}
+		});
+		btnPagarConta.setBounds(305, 265, 134, 23);
+		finalizar.add(btnPagarConta);
 		
 		///////////////////////////// BOTÕES DO MENU//////////////////////////////////////////////////////////
 
@@ -811,14 +885,11 @@ public class home extends JFrame {
 				quarto.setVisible(false);
 				cliente.setVisible(false);
 				finalizar.setVisible(true);
+				txtValorTotalServico.setText("0");
 			}
 		});		
 		btnFecharReserva.setBounds(10, 335, 121, 61);
 		menu.add(btnFecharReserva);
-
-		JButton btnAtendente = new JButton("Atendente");
-		btnAtendente.setBounds(10, 214, 121, 23);
-		menu.add(btnAtendente);
 
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 	}

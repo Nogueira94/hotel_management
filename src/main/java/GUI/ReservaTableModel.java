@@ -27,9 +27,9 @@ public class ReservaTableModel extends AbstractTableModel {
         case 0: return this.dados.get(linha).getCodigo();
         case 1: return this.dados.get(linha).getDataEntrada();
         case 2: return this.dados.get(linha).getDataSaida();        
-        case 3: return this.dados.get(linha).getCliente();
+        case 3: return this.dados.get(linha).getCliente().getCpf();
         case 4: return this.dados.get(linha).getDeposito();
-        case 5: return this.dados.get(linha).getQuarto();        
+        case 5: return this.dados.get(linha).getQuarto().getNumero();        
         default: return null;
 		}		
 	}

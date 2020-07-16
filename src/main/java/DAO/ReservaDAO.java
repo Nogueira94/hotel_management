@@ -85,11 +85,93 @@ public class ReservaDAO {
         }
 
     }
-
-    public Reserva pesquisar(int codigo){
-		return null;
-
+    
+    public Double getDeposito(int codigo){
+    	
+    	Reserva obj = new Reserva();   
+    	
+        Double value = (double) 0;
+    	
+    	try{
+            if(conexao.conectar()){
+                String sql = "select *  from reserva where codigo=?";
+                PreparedStatement stmt = conexao.prepareStatement(sql);
+                stmt.setLong(1, codigo);
+                ResultSet resultado = stmt.executeQuery();
+                if(! resultado.isClosed()){
+                	obj.setCodigo(resultado.getLong("codigo"));
+                	obj.setDataEntrada(resultado.getString("dtEntr"));
+                	obj.setDataSaida(resultado.getString("dtSaida"));
+                	obj.setDeposito(resultado.getDouble("deposito"));
+                	//obj.setQuarto(resultado.getObject("quarto"));                	
+                	//QuartoDAO q = new QuartoDAO();
+                	//obj.setQuarto(q.pesquisar(resultado.getInt("quarto")));
+                	//obj.setQuarto(q.getQuarto(resultado.getInt("quarto")));                 	              
+                }
+                
+                value = obj.getDeposito();
+                //price = price + obj.getQuarto().getValorDiaria();
+                return value;
+                
+            } else {
+            	return value;
+            }
+        } 
+        catch(SQLException err){
+            System.err.println(err.getMessage());
+            return value;
+        }
+        finally{
+            conexao.desconectar();    
+            System.err.println(obj.getQuarto());
+            
+        }
     }
+
+    public Long getReserva(int codigo){
+    	Reserva obj = new Reserva();   
+    	
+        Long value = (long)0;
+    	
+    	try{
+            if(conexao.conectar()){
+                String sql = "select *  from reserva where codigo=?";
+                PreparedStatement stmt = conexao.prepareStatement(sql);
+                stmt.setLong(1, codigo);
+                ResultSet resultado = stmt.executeQuery();
+                if(! resultado.isClosed()){
+                	obj.setCodigo(resultado.getLong("codigo"));
+                	obj.setDataEntrada(resultado.getString("dtEntr"));
+                	obj.setDataSaida(resultado.getString("dtSaida"));
+                	obj.setDeposito(resultado.getDouble("deposito"));
+                	//obj.setQuarto(resultado.getObject("quarto"));                	
+                	//QuartoDAO q = new QuartoDAO();
+                	//obj.setQuarto(q.pesquisar(resultado.getInt("quarto")));
+                	//obj.setQuarto(q.getQuarto(resultado.getInt("quarto")));                 	              
+                }
+                
+                value = obj.totalDiarias(obj.getDataEntrada(),obj.getDataSaida());
+                //price = price + obj.getQuarto().getValorDiaria();
+                return value;
+                
+            } else {
+            	return value;
+            }
+        } 
+        catch(SQLException err){
+            System.err.println(err.getMessage());
+            return value;
+        }
+        finally{
+            conexao.desconectar();    
+            System.err.println(obj.getQuarto());
+            
+        }
+    }
+    
+    //public Double getValorReserva (String dtEntrada, String dtSaida) {
+    	
+    //}
 
     public List<Reserva> returnList(String search){
         List<Reserva> list = new ArrayList<Reserva>();
@@ -120,10 +202,10 @@ public class ReservaDAO {
                 	obj.setDataEntrada(resultado.getString("dtEntr"));
                 	obj.setDataSaida(resultado.getString("dtSaida"));
                 	ClienteDAO cliente = new ClienteDAO();
-                	obj.setCliente(cliente.pesquisar(resultado.getInt("cliente")));
+                	obj.setCliente(cliente.getClienteCpf(resultado.getInt("cliente")));
                 	obj.setDeposito(resultado.getDouble("deposito"));
                 	QuartoDAO quarto = new QuartoDAO();
-                	obj.setQuarto(quarto.pesquisar(resultado.getInt("quarto")));                	
+                	obj.setQuarto(quarto.getQuartoNum(resultado.getInt("quarto")));                	
                     list.add(obj);
                 }
             }

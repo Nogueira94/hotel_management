@@ -13,26 +13,26 @@ public class Hospedagem extends Reserva {
         super(codigo, dataEntrada, dataSaida, cliente, deposito, quarto);
     }
     
-    public void adicionarGasto(Servico obj){
-        gastos.add(obj);
-        calculaTotal();
-    }
+//    public void adicionarGasto(Servico obj){
+//        gastos.add(obj);
+//        calculaTotal();
+//    }
         
     
-    public void calculaTotal(){
-        double totalDiarias = super.totalDiarias() * this.getQuarto().getValorDiaria();
-        double totalGastos =0;
-        for(Servico obj : gastos){
-           totalGastos += obj.getValor();
-        }
-        this.setValorTotal(totalDiarias+totalGastos);
-    }
+//    public void calculaTotal(){
+//        double totalDiarias = super.totalDiarias() * this.getQuarto().getValorDiaria();
+//        double totalGastos =0;
+//        for(Servico obj : gastos){
+//           totalGastos += obj.getValor();
+//        }
+//        this.setValorTotal(totalDiarias+totalGastos);
+//    }
     
         
-    public void fecharConta(){
-        //DAO
-        calculaTotal();        
-    }       
+//    public void fecharConta(){
+//        //DAO
+//        calculaTotal();        
+//    }       
     
     
     /**

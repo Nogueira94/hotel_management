@@ -1,9 +1,12 @@
 package fatec.hotel;
 
-import java.sql.Date;
+import java.util.Date;
 import java.text.SimpleDateFormat;
 
 public class Reserva {
+	
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+	
     private Long codigo;
     private String dataEntrada;
     private String dataSaida;
@@ -11,7 +14,7 @@ public class Reserva {
     private double deposito;
     private Quarto quarto;
     
-    private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    
 
     public Reserva(Long codigo, String dataEntrada, String dataSaida, 
             Cliente cliente, double deposito, Quarto quarto){
@@ -23,17 +26,27 @@ public class Reserva {
         this.setQuarto(quarto);
     }
     
-    public long totalDiarias() {        
+    public Long totalDiarias(String dataEnt, String dataSai) {    	  	
         long diff = -1;
+        String value=diff+"";
         try {          
-          Date dataEntrada = (Date) sdf.parse(this.dataEntrada);
-          Date dataSaida = (Date) sdf.parse(this.dataSaida); 
+          Date dataEntrada = sdf.parse(dataEnt);
+          Date dataSaida = sdf.parse(dataSai);
           //time is always 00:00:00, so rounding should help to ignore the missing hour when going from winter to summer time, as well as the extra hour in the other direction
           diff = Math.round((dataSaida.getTime() - dataEntrada.getTime()) / (double) 86400000);
+          value = diff+"";
+          
+          
         } catch (Exception e) {
           System.out.println("ERRO: DATA DE ENTRADA APÓS DATA DE SAIDA");
+         // System.out.println("---"+dataEnt);
+          //System.out.println("---"+dataSai);
+          //System.out.println("---------");
+          //System.out.println("---"+dataEntrada);
+          //System.out.println("---"+dataSaida);
         }
         return diff;
+        
   }   
      
     public Reserva() {

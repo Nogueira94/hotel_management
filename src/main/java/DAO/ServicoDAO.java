@@ -7,6 +7,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import fatec.hotel.Quarto;
 import fatec.hotel.Servico;
 
 public class ServicoDAO {
@@ -73,6 +74,34 @@ public class ServicoDAO {
             return cont;
         }
 
+    }
+    
+    public Double valorTotalServico (int codigo) {
+    	Servico obj = new Servico();    	        
+    	try{
+            if(conexao.conectar()){
+                String sql = "select *  from servico where codigo=?";
+                PreparedStatement stmt = conexao.prepareStatement(sql);
+                stmt.setInt(1, codigo);
+                ResultSet resultado = stmt.executeQuery();
+                if(! resultado.isClosed()){
+                	obj.setCodigo(resultado.getLong("codigo"));                	
+                	obj.setValor(resultado.getDouble("valor"));                	
+                }
+                
+                return obj.getValor();
+            } else {
+            	return null;
+            }
+        } 
+        catch(SQLException err){
+            System.err.println(err.getMessage());
+            return null;
+        }
+        finally{
+            conexao.desconectar();       
+            
+        }
     }
 
     public int remover (int codigo){
