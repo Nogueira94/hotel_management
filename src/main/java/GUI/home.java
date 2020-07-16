@@ -6,11 +6,13 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
 import fatec.hotel.Cliente;
 import fatec.hotel.Quarto;
 import fatec.hotel.Reserva;
 import DAO.ClienteDAO;
+import DAO.QuartoDAO;
 import DAO.ReservaDAO;
 
 import javax.swing.JTextField;
@@ -23,10 +25,30 @@ import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.awt.event.ActionEvent;
+import javax.swing.JList;
+import javax.swing.JTable;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class home extends JFrame {
-
+	
+	
+	QuartoTableModel modeloQuarto = new QuartoTableModel();
+	
+	private void carregarListaQuarto() {			
+		String busca = txtNumQuarto.getText();
+		QuartoDAO dao = new QuartoDAO();
+		List<Quarto> lista =dao.returnList("");
+		modeloQuarto.setDados(lista);
+		if (busca != "") {
+			List<Quarto> lista2 =dao.returnList(busca);
+			modeloQuarto.setDados(lista2);
+		}			
+		tableQuarto.setModel(modeloQuarto);
+	}
+	
 	private JPanel txtNome;
 	private JTextField txtCodigo;
 	private JTextField txtEntrada;
@@ -44,6 +66,10 @@ public class home extends JFrame {
 	private JTextField txtEstadoCliente;
 	private JTextField txtCEPCliente;
 	private JTextField txtTelefoneCliente;
+	private JTextField txtNumQuarto;
+	private JTextField txtValorQuarto;
+	private JTextField txtDescricaoQuarto;
+	private JTable tableQuarto;
 
 	/**
 	 * Launch the application.
@@ -65,6 +91,8 @@ public class home extends JFrame {
 	 * Create the frame.
 	 */
 	public home() {
+		setTitle("HOTEL ALABAMA");		
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1320, 854);
 		txtNome = new JPanel();
@@ -73,127 +101,11 @@ public class home extends JFrame {
 		setContentPane(txtNome);
 		txtNome.setLayout(null);
 		
-		JPanel menu = new JPanel();
-		menu.setBackground(new Color(102, 102, 255));
-		menu.setBounds(0, 0, 140, 407);
-		txtNome.add(menu);
-		menu.setLayout(null);
-				
-		
-		JPanel reserva = new JPanel();
-		reserva.setBackground(new Color(211, 211, 211));
-		reserva.setBounds(150, 0, 554, 407);
-		txtNome.add(reserva);
-		reserva.setLayout(null);
-		
-		JLabel lblCod = new JLabel("Código da Reserva");
-		lblCod.setBounds(10, 55, 134, 14);
-		reserva.add(lblCod);
-		
-		txtCodigo = new JTextField();
-		txtCodigo.setBounds(10, 77, 191, 20);
-		reserva.add(txtCodigo);
-		txtCodigo.setColumns(10);
-		
-		JLabel lvlDtEnt = new JLabel("Data de Entrada");
-		lvlDtEnt.setBounds(10, 108, 134, 14);
-		reserva.add(lvlDtEnt);
-		
-		txtEntrada = new JTextField();
-		txtEntrada.setBounds(10, 130, 191, 20);
-		reserva.add(txtEntrada);
-		txtEntrada.setColumns(10);
-		
-		JLabel lblDtSai = new JLabel("Data de Saida");
-		lblDtSai.setBounds(10, 161, 134, 14);
-		reserva.add(lblDtSai);
-		
-		txtSaida = new JTextField();
-		txtSaida.setBounds(10, 183, 191, 20);
-		reserva.add(txtSaida);
-		txtSaida.setColumns(10);
-		
-		JLabel lblDepositoentrada = new JLabel("Deposito (Entrada)");
-		lblDepositoentrada.setBounds(211, 108, 134, 14);
-		reserva.add(lblDepositoentrada);
-		
-		txtDeposito = new JTextField();
-		txtDeposito.setBounds(211, 130, 191, 20); 
-		reserva.add(txtDeposito);
-		txtDeposito.setColumns(10);
-		
-		JLabel lblNmeroDoQuarto = new JLabel("Número do Quarto");
-		lblNmeroDoQuarto.setBounds(211, 161, 134, 14);
-		reserva.add(lblNmeroDoQuarto);
-		
-		txtQuarto = new JTextField();
-		txtQuarto.setBounds(211, 183, 191, 20);
-		reserva.add(txtQuarto);
-		txtQuarto.setColumns(10);
-		
-		JButton btnReserva = new JButton("Confirmar Reserva");
-		btnReserva.addActionListener(new ActionListener() {			
-			public void actionPerformed(ActionEvent e) {				
-				
-				Cliente c = new ClienteDAO().getClienteCpf(txtCPF.getText());
-				Cliente clientePesquisado;
-				clientePesquisado = null;
-				if(c == null) {
-					JOptionPane.showConfirmDialog(reserva, "Cliente nao encontrado");
-				} else {
-					clientePesquisado = c;
-				}
-				
-				Reserva obj = new Reserva();
-				obj.setCodigo(Long.parseLong(txtCodigo.getText()));
-				obj.setDataEntrada(txtEntrada.getText());
-				obj.setDataSaida(txtSaida.getText());
-				obj.setCliente(c);				
-				obj.setDeposito(Double.parseDouble(txtDeposito.getText()));
-				obj.setQuarto(txtQuarto.getText());
-				
-				ReservaDAO dao = new ReservaDAO();
-				   if(dao.inserir(obj)==1){
-			    	   JOptionPane.showConfirmDialog(reserva, "Cadastrado com sucesso");
-			       } else {
-			    	   JOptionPane.showConfirmDialog(reserva, "ERROR");
-			       }
-			}
-		});
-		btnReserva.setBounds(412, 90, 134, 23);
-		reserva.add(btnReserva);
-		
-		JLabel lblNewLabel = new JLabel("Reserva de quartos");
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 25));
-		lblNewLabel.setBounds(10, 11, 216, 31);
-		reserva.add(lblNewLabel);
-		
-		JButton btnBuscarReserva = new JButton("Buscar Reserva");
-		btnBuscarReserva.setBounds(412, 117, 134, 23);
-		reserva.add(btnBuscarReserva);
-		
-		txtCPF = new JTextField();
-		txtCPF.setBounds(211, 77, 191, 20);
-		reserva.add(txtCPF);
-		txtCPF.setColumns(10);
-		
-		JLabel lblCpfDoCliente = new JLabel("CPF do Cliente");
-		lblCpfDoCliente.setBounds(211, 55, 134, 14);
-		reserva.add(lblCpfDoCliente);
-		
-		JButton btnAlterarReserva = new JButton("Alterar Reserva");
-		btnAlterarReserva.setBounds(412, 142, 134, 23);
-		reserva.add(btnAlterarReserva);
-		
-		JButton btnExcluirReserva = new JButton("Excluir Reserva");
-		btnExcluirReserva.setBounds(412, 170, 134, 23);
-		reserva.add(btnExcluirReserva);		
-		
 		
 		JPanel cliente = new JPanel();
-		cliente.setBackground(new Color(211, 211, 211));
-		cliente.setBounds(150, 408, 564, 407);
+		cliente.setBounds(140, 0, 564, 407);
 		txtNome.add(cliente);
+		cliente.setBackground(new Color(211, 211, 211));
 		cliente.setLayout(null);
 		
 		JLabel lblCodCliente = new JLabel("Código do Cliente");
@@ -260,9 +172,9 @@ public class home extends JFrame {
 				
 				ClienteDAO dao = new ClienteDAO();
 				   if(dao.inserir(obj)==1){
-			    	   JOptionPane.showConfirmDialog(cliente, "Cadastrado com sucesso");
+			    	   JOptionPane.showMessageDialog(cliente, "Cadastrado com sucesso");
 			       } else {
-			    	   JOptionPane.showConfirmDialog(cliente, "ERROR");
+			    	   JOptionPane.showMessageDialog(cliente, "ERROR");
 			       }
 			}
 		});
@@ -331,6 +243,131 @@ public class home extends JFrame {
 		txtTelefoneCliente.setBounds(211, 289, 191, 20);
 		cliente.add(txtTelefoneCliente);
 		
+		JPanel menu = new JPanel();
+		menu.setBackground(new Color(102, 102, 255));
+		menu.setBounds(0, 0, 140, 407);
+		txtNome.add(menu);
+		menu.setLayout(null);
+				
+		
+		JPanel reserva = new JPanel();
+		reserva.setBackground(new Color(211, 211, 211));
+		reserva.setBounds(140, 0, 564, 407);
+		txtNome.add(reserva);
+		reserva.setLayout(null);
+		
+		JLabel lblCod = new JLabel("Código da Reserva");
+		lblCod.setBounds(10, 55, 134, 14);
+		reserva.add(lblCod);
+		
+		txtCodigo = new JTextField();
+		txtCodigo.setBounds(10, 77, 191, 20);
+		reserva.add(txtCodigo);
+		txtCodigo.setColumns(10);
+		
+		JLabel lvlDtEnt = new JLabel("Data de Entrada");
+		lvlDtEnt.setBounds(10, 108, 134, 14);
+		reserva.add(lvlDtEnt);
+		
+		txtEntrada = new JTextField();
+		txtEntrada.setBounds(10, 130, 191, 20);
+		reserva.add(txtEntrada);
+		txtEntrada.setColumns(10);
+		
+		JLabel lblDtSai = new JLabel("Data de Saida");
+		lblDtSai.setBounds(10, 161, 134, 14);
+		reserva.add(lblDtSai);
+		
+		txtSaida = new JTextField();
+		txtSaida.setBounds(10, 183, 191, 20);
+		reserva.add(txtSaida);
+		txtSaida.setColumns(10);
+		
+		JLabel lblDepositoentrada = new JLabel("Deposito (Entrada)");
+		lblDepositoentrada.setBounds(211, 108, 134, 14);
+		reserva.add(lblDepositoentrada);
+		
+		txtDeposito = new JTextField();
+		txtDeposito.setBounds(211, 130, 191, 20); 
+		reserva.add(txtDeposito);
+		txtDeposito.setColumns(10);
+		
+		JLabel lblNmeroDoQuarto = new JLabel("Número do Quarto");
+		lblNmeroDoQuarto.setBounds(211, 161, 134, 14);
+		reserva.add(lblNmeroDoQuarto);
+		
+		txtQuarto = new JTextField();
+		txtQuarto.setBounds(211, 183, 191, 20);
+		reserva.add(txtQuarto);
+		txtQuarto.setColumns(10);
+		
+		JButton btnReserva = new JButton("Confirmar Reserva");
+		btnReserva.addActionListener(new ActionListener() {			
+			public void actionPerformed(ActionEvent e) {				
+				
+				Cliente c = new ClienteDAO().getClienteCpf(Integer.parseInt(txtCPF.getText()));
+				Cliente clientePesquisado;
+				clientePesquisado = null;
+				if(c == null) {
+					JOptionPane.showMessageDialog(reserva, "Cliente nao encontrado");
+				} else {
+					clientePesquisado = c;
+				}
+				
+				Quarto q = new QuartoDAO().isDisponivel(Integer.parseInt(txtQuarto.getText()));
+				Quarto quarto_disponivel;
+				quarto_disponivel=null;
+				if (q==null) {
+					JOptionPane.showMessageDialog(reserva, "Cliente nao encontrado");
+				} else {
+					quarto_disponivel = q;
+				}
+				
+				Reserva obj = new Reserva();
+				obj.setCodigo(Long.parseLong(txtCodigo.getText()));
+				obj.setDataEntrada(txtEntrada.getText());
+				obj.setDataSaida(txtSaida.getText());
+				obj.setCliente(c);				
+				obj.setDeposito(Double.parseDouble(txtDeposito.getText()));
+				obj.setQuarto(quarto_disponivel);
+				
+				ReservaDAO dao = new ReservaDAO();
+				   if(dao.inserir(obj)==1){
+			    	   JOptionPane.showMessageDialog(reserva, "Cadastrado com sucesso");
+			       } else {
+			    	   JOptionPane.showMessageDialog(reserva, "ERROR");
+			       }
+			}
+		});
+		btnReserva.setBounds(412, 90, 134, 23);
+		reserva.add(btnReserva);		
+		
+		JLabel lblNewLabel = new JLabel("Reserva de quartos");
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		lblNewLabel.setBounds(10, 11, 216, 31);
+		reserva.add(lblNewLabel);
+		
+		JButton btnBuscarReserva = new JButton("Buscar Reserva");
+		btnBuscarReserva.setBounds(412, 117, 134, 23);
+		reserva.add(btnBuscarReserva);
+		
+		txtCPF = new JTextField();
+		txtCPF.setBounds(211, 77, 191, 20);
+		reserva.add(txtCPF);
+		txtCPF.setColumns(10);
+		
+		JLabel lblCpfDoCliente = new JLabel("CPF do Cliente");
+		lblCpfDoCliente.setBounds(211, 55, 134, 14);
+		reserva.add(lblCpfDoCliente);
+		
+		JButton btnAlterarReserva = new JButton("Alterar Reserva");
+		btnAlterarReserva.setBounds(412, 142, 134, 23);
+		reserva.add(btnAlterarReserva);
+		
+		JButton btnExcluirReserva = new JButton("Excluir Reserva");
+		btnExcluirReserva.setBounds(412, 170, 134, 23);
+		reserva.add(btnExcluirReserva);		
+		
 		
 		/////////////////////////////BOTÕES DO MENU
 		
@@ -353,5 +390,89 @@ public class home extends JFrame {
 		});
 		btnCallReserva.setBounds(10, 69, 121, 23);
 		menu.add(btnCallReserva);
+		
+		
+		////////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		JPanel quarto = new JPanel();
+		quarto.setLayout(null);
+		quarto.setBackground(new Color(211, 211, 211));
+		quarto.setBounds(727, 0, 554, 407);
+		txtNome.add(quarto);
+		
+		JLabel lblCdigoDoQuarto = new JLabel("Numero do Quarto");
+		lblCdigoDoQuarto.setBounds(10, 55, 134, 14);
+		quarto.add(lblCdigoDoQuarto);
+		
+		txtNumQuarto = new JTextField();
+		txtNumQuarto.setColumns(10);
+		txtNumQuarto.setBounds(10, 77, 191, 20);
+		quarto.add(txtNumQuarto);
+		
+		JLabel lblValorDoQuarto = new JLabel("Valor do Quarto");
+		lblValorDoQuarto.setBounds(10, 108, 134, 14);
+		quarto.add(lblValorDoQuarto);
+		
+		txtValorQuarto = new JTextField();
+		txtValorQuarto.setColumns(10);
+		txtValorQuarto.setBounds(10, 130, 191, 20);
+		quarto.add(txtValorQuarto);
+					
+		JLabel lblCriaoDeQuartos = new JLabel("Criação de Quartos");
+		lblCriaoDeQuartos.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		lblCriaoDeQuartos.setBounds(10, 11, 216, 31);
+		quarto.add(lblCriaoDeQuartos);
+		
+		JButton btnBuscarQuarto = new JButton("Buscar Quarto");
+		btnBuscarQuarto.addMouseListener(new MouseAdapter() {			
+			public void mouseClicked(MouseEvent arg0) {
+				tableQuarto.repaint();
+				carregarListaQuarto();
+			}
+		});		
+		btnBuscarQuarto.setBounds(412, 104, 134, 23);
+		quarto.add(btnBuscarQuarto);
+		
+		txtDescricaoQuarto = new JTextField();
+		txtDescricaoQuarto.setColumns(10);
+		txtDescricaoQuarto.setBounds(211, 77, 191, 20);
+		quarto.add(txtDescricaoQuarto);
+		
+		JButton btnCadastroQuarto = new JButton("Cadastrar Quarto");
+		btnCadastroQuarto.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Quarto obj = new Quarto();
+				obj.setNumero(Long.parseLong(txtNumQuarto.getText()));
+				obj.setDescritivo(txtDescricaoQuarto.getText());
+				obj.setDisponibilidae(true);
+				obj.setValorDiaria(Double.parseDouble(txtValorQuarto.getText()));
+				
+				QuartoDAO dao = new QuartoDAO();
+				   if(dao.inserir(obj)==1){
+			    	   JOptionPane.showMessageDialog(cliente, "Cadastrado com sucesso");
+			       } else {
+			    	   JOptionPane.showMessageDialog(cliente, "ERROR");
+			       }
+			}
+		});
+		
+		btnCadastroQuarto.setBounds(412, 77, 134, 23);
+		quarto.add(btnCadastroQuarto);
+		
+		JLabel lblDescriaDoQuarto = new JLabel("Descrição do Quarto");
+		lblDescriaDoQuarto.setBounds(211, 55, 134, 14);
+		quarto.add(lblDescriaDoQuarto);
+		
+		JButton btnAlterarQuarto = new JButton("Alterar Quarto");
+		btnAlterarQuarto.setBounds(412, 129, 134, 23);
+		quarto.add(btnAlterarQuarto);
+		
+		JButton btnExcluirQuarto = new JButton("Excluir Quarto");
+		btnExcluirQuarto.setBounds(412, 157, 134, 23);
+		quarto.add(btnExcluirQuarto);
+		
+		tableQuarto = new JTable();
+		tableQuarto.setBounds(29, 209, 498, 187);
+		quarto.add(tableQuarto);
 	}
 }

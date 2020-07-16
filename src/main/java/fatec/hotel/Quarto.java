@@ -22,7 +22,12 @@ public class Quarto {
     }
 
     
-    public void consultar(){
+    public Quarto() {
+		// TODO Auto-generated constructor stub
+	}
+
+
+	public void consultar(){
         //DAO
     }
     

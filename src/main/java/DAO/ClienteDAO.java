@@ -78,14 +78,22 @@ public class ClienteDAO {
 
     }
     
-    public Cliente getClienteCpf (String cpf) {
+    public Cliente getClienteCpf (int cpf) {
+    	
+    	Cliente obj = new Cliente();   
+            
     	try{
             if(conexao.conectar()){
                 String sql = "select *  from cliente where cpf=?";
                 PreparedStatement stmt = conexao.prepareStatement(sql);
-                stmt.setString(1, cpf);
+                stmt.setInt(1, cpf);
                 ResultSet resultado = stmt.executeQuery();
-                return (Cliente) resultado;
+                if(! resultado.isClosed()){
+                	obj.setCodigo(resultado.getLong("codigo"));
+                	obj.setNome(resultado.getString("nome"));
+                	obj.setCpf(resultado.getInt("cpf"));
+                	obj.setTelefone(resultado.getString("telefone"));               
+                }
             }
         } 
         catch(SQLException err){
@@ -93,7 +101,7 @@ public class ClienteDAO {
         }
         finally{
             conexao.desconectar();       
-            return null;
+            return obj;
         }
     }
 
