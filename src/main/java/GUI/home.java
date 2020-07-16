@@ -8,9 +8,11 @@ import javax.swing.border.EmptyBorder;
 import fatec.hotel.Cliente;
 import fatec.hotel.Quarto;
 import fatec.hotel.Reserva;
+import fatec.hotel.Servico;
 import DAO.ClienteDAO;
 import DAO.QuartoDAO;
 import DAO.ReservaDAO;
+import DAO.ServicoDAO;
 
 import javax.swing.JTextField;
 import javax.swing.JLabel;
@@ -24,6 +26,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.SwingConstants;
 
 @SuppressWarnings("serial")
 public class home extends JFrame {
@@ -33,6 +36,7 @@ public class home extends JFrame {
 	QuartoTableModel modeloQuarto = new QuartoTableModel();
 	ClienteTableModel modeloCliente = new ClienteTableModel();
 	ReservaTableModel modeloReserva = new ReservaTableModel();
+	ServicoTableModel modeloServico = new ServicoTableModel();
 	
 	private void carregarListaQuarto() {			
 		String busca = txtNumQuarto.getText();
@@ -68,6 +72,18 @@ public class home extends JFrame {
 			modeloReserva.setDados(lista2);
 		}			
 		tableReserva.setModel(modeloReserva);
+	}
+	
+	private void carregarListaServico() {			
+		String busca = txtCodigoServico.getText();
+		ServicoDAO dao = new ServicoDAO();
+		List<Servico> lista =dao.returnList("");
+		modeloServico.setDados(lista);
+		if (busca != "") {
+			List<Servico> lista2 =dao.returnList(busca);
+			modeloServico.setDados(lista2);
+		}			
+		tableServico.setModel(modeloServico);
 	}
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -129,6 +145,14 @@ public class home extends JFrame {
 		txtNome.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(txtNome);
 		txtNome.setLayout(null);
+		
+		JPanel menu = new JPanel();
+		menu.setBackground(new Color(102, 102, 255));
+		menu.setBounds(0, 0, 140, 407);
+		txtNome.add(menu);
+		menu.setLayout(null);
+		
+		
 		
 		
 		JPanel cliente = new JPanel();
@@ -281,12 +305,6 @@ public class home extends JFrame {
 		tableCliente = new JTable();
 		tableCliente.setBounds(10, 317, 498, 79);
 		cliente.add(tableCliente);
-		
-		JPanel menu = new JPanel();
-		menu.setBackground(new Color(102, 102, 255));
-		menu.setBounds(0, 0, 140, 407);
-		txtNome.add(menu);
-		menu.setLayout(null);
 				
 		
 		JPanel reserva = new JPanel();
@@ -338,7 +356,8 @@ public class home extends JFrame {
 		txtQuarto = new JTextField();
 		txtQuarto.setBounds(211, 183, 191, 20);
 		reserva.add(txtQuarto);
-		txtQuarto.setColumns(10);
+		txtQuarto.setColumns(10);	
+		
 		
 		JButton btnReserva = new JButton("Confirmar Reserva");
 		btnReserva.addActionListener(new ActionListener() {			
@@ -371,10 +390,14 @@ public class home extends JFrame {
 				obj.setQuarto(quarto_disponivel);
 				
 				ReservaDAO dao = new ReservaDAO();
-				   if(dao.inserir(obj)==1){
+				   if(dao.inserir(obj)==1 && c.getCpf() != null && q.isDisponibilidae()){
 			    	   JOptionPane.showMessageDialog(reserva, "Cadastrado com sucesso");
+			    	   QuartoDAO disp = new QuartoDAO();
+			    	   disp.changeDisponibilidade(q);
+			    	   System.out.println(c.getCpf());
+			    	   System.out.println(q.isDisponibilidae());
 			       } else {
-			    	   JOptionPane.showMessageDialog(reserva, "ERROR");
+			    	   JOptionPane.showMessageDialog(reserva, "Cliente não Encontrado ou quarto Indisponivel");
 			       }
 			}
 		});
@@ -387,8 +410,8 @@ public class home extends JFrame {
 		reserva.add(lblNewLabel);
 		
 		JButton btnBuscarReserva = new JButton("Buscar Reserva");
-		btnBuscarReserva.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		btnBuscarReserva.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent arg0) {
 				tableReserva.repaint();
 				carregarListaReserva();
 			}
@@ -410,6 +433,18 @@ public class home extends JFrame {
 		reserva.add(btnAlterarReserva);
 		
 		JButton btnExcluirReserva = new JButton("Excluir Reserva");
+		btnExcluirReserva.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int codigo = Integer.parseInt(txtCodigo.getText());
+				ReservaDAO dao = new ReservaDAO();
+				if (dao.remover(codigo) > 0) {
+					JOptionPane.showMessageDialog(cliente, "Reserva removida com sucesso");
+				} else {
+					JOptionPane.showMessageDialog(cliente, "Reserva não alterado");
+				}
+
+			}
+		});
 		btnExcluirReserva.setBounds(412, 170, 134, 23);
 		reserva.add(btnExcluirReserva);		
 		
@@ -558,6 +593,12 @@ public class home extends JFrame {
 		servicos.add(lblCriaoDeServio);
 		
 		JButton btnBuscarServico = new JButton("Buscar Servico");
+		btnBuscarServico.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				tableServico.repaint();
+				carregarListaServico();
+			}
+		});
 		btnBuscarServico.setBounds(412, 104, 134, 23);
 		servicos.add(btnBuscarServico);
 		
@@ -567,6 +608,21 @@ public class home extends JFrame {
 		servicos.add(txtDescricaoServico);
 		
 		JButton btnCadastrarServico = new JButton("Cadastrar Servico");
+		btnCadastrarServico.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Servico obj = new Servico();
+				obj.setCodigo(Long.parseLong(txtCodigoServico.getText()));
+				obj.setDescritivo(txtDescricaoServico.getText());
+				obj.setValor(Double.parseDouble(txtValorServico.getText()));				
+				
+				ServicoDAO dao = new ServicoDAO();
+				   if(dao.inserir(obj)>0){
+			    	   JOptionPane.showMessageDialog(cliente, "Servico inserido com sucesso");
+			       } else {
+			    	   JOptionPane.showMessageDialog(cliente, "ERROR");
+			       }
+			}
+		});
 		btnCadastrarServico.setBounds(412, 77, 134, 23);
 		servicos.add(btnCadastrarServico);
 		
@@ -575,10 +631,36 @@ public class home extends JFrame {
 		servicos.add(lblDescrioDoServio);
 		
 		JButton btnAlterarServico = new JButton("Alterar Servico");
+		btnAlterarServico.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Servico obj = new Servico();
+				obj.setCodigo(Long.parseLong(txtCodigoServico.getText()));
+				obj.setDescritivo(txtDescricaoServico.getText());
+				obj.setValor(Double.parseDouble(txtValorServico.getText()));				
+				
+				ServicoDAO dao = new ServicoDAO();
+				   if(dao.alterar(obj)>0){
+			    	   JOptionPane.showMessageDialog(cliente, "Servico alterado com sucesso");
+			       } else {
+			    	   JOptionPane.showMessageDialog(cliente, "ERROR");
+			       }
+			}
+		});
 		btnAlterarServico.setBounds(412, 129, 134, 23);
 		servicos.add(btnAlterarServico);
 		
 		JButton btnExcluirServico = new JButton("Excluir Servico");
+		btnExcluirServico.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int codigo = Integer.parseInt(txtCodigoServico.getText());
+				ServicoDAO dao = new ServicoDAO();				
+				if (dao.remover(codigo) > 0) {
+					JOptionPane.showMessageDialog(cliente, "Servico removido com sucesso");
+				} else {
+					JOptionPane.showMessageDialog(cliente, "Servico não alterado");
+				}
+			}
+		});
 		btnExcluirServico.setBounds(412, 157, 134, 23);
 		servicos.add(btnExcluirServico);
 		

@@ -20,7 +20,11 @@ public class Servico {
         this.setValor(valor);
     }
 
-    /**
+    public Servico() {
+		// TODO Auto-generated constructor stub
+	}
+
+	/**
      * @return the codigo
      */
     public Long getCodigo() {

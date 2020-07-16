@@ -66,8 +66,23 @@ public class ReservaDAO {
 
     }
 
-    public int remover (Reserva obj){
-		return 0;
+    public int remover (int codigo){		
+		int cont = 0;
+        try{
+            if(conexao.conectar()){
+                String sql = "delete from reserva where codigo=?";
+                PreparedStatement stmt = conexao.prepareStatement(sql);
+                stmt.setInt(1, codigo);
+                cont = stmt.executeUpdate();
+            }
+        } 
+        catch(SQLException err){
+            System.err.println(err.getMessage());
+        }
+        finally{
+            conexao.desconectar();
+            return cont;
+        }
 
     }
 
@@ -104,9 +119,11 @@ public class ReservaDAO {
                 	obj.setCodigo(resultado.getLong("codigo"));
                 	obj.setDataEntrada(resultado.getString("dtEntr"));
                 	obj.setDataSaida(resultado.getString("dtSaida"));
-                	//obj.setCliente(c);
+                	ClienteDAO cliente = new ClienteDAO();
+                	obj.setCliente(cliente.pesquisar(resultado.getInt("cliente")));
                 	obj.setDeposito(resultado.getDouble("deposito"));
-                	//obj.setQuarto(q);                	
+                	QuartoDAO quarto = new QuartoDAO();
+                	obj.setQuarto(quarto.pesquisar(resultado.getInt("quarto")));                	
                     list.add(obj);
                 }
             }

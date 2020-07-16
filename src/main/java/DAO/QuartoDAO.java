@@ -56,6 +56,26 @@ public class QuartoDAO {
         }
 
     }
+	
+	public int changeDisponibilidade (Quarto obj) {
+		int cont = 0;
+        try{
+            if(conexao.conectar()){
+                String sql = "update quarto set disponibilidade=0 where numero=?";
+                PreparedStatement stmt = conexao.prepareStatement(sql);
+                stmt.setLong(1, obj.getNumero());
+                cont = stmt.executeUpdate();
+            }
+        } 
+        catch(SQLException err){
+            System.err.println(err.getMessage());
+        }
+        finally{
+            conexao.desconectar();
+            return cont;
+        }
+		
+	}
     
     public Quarto isDisponivel (int quarto) {
     	Quarto obj = new Quarto();    	        
@@ -71,14 +91,19 @@ public class QuartoDAO {
                 	obj.setValorDiaria(resultado.getDouble("valorDiaria"));
                 	obj.setDisponibilidae(resultado.getBoolean("disponibilidade"));
                 }
+                
+                return obj;
+            } else {
+            	return null;
             }
         } 
         catch(SQLException err){
             System.err.println(err.getMessage());
+            return null;
         }
         finally{
             conexao.desconectar();       
-            return obj;
+            
         }
     	
     }

@@ -119,7 +119,7 @@ public class ClienteDAO {
 
     }
     
-    public Cliente getClienteCpf (int cpf) {
+    public Cliente getClienteCpf (long cpf) {
     	
     	Cliente obj = new Cliente();   
             
@@ -127,7 +127,7 @@ public class ClienteDAO {
             if(conexao.conectar()){
                 String sql = "select *  from cliente where cpf=?";
                 PreparedStatement stmt = conexao.prepareStatement(sql);
-                stmt.setInt(1, cpf);
+                stmt.setLong(1, cpf);
                 ResultSet resultado = stmt.executeQuery();
                 if(! resultado.isClosed()){
                 	obj.setCodigo(resultado.getLong("codigo"));
@@ -135,14 +135,19 @@ public class ClienteDAO {
                 	obj.setCpf(resultado.getInt("cpf"));
                 	obj.setTelefone(resultado.getString("telefone"));               
                 }
+                
+                return obj;
+            } else {
+            	return null;
             }
         } 
         catch(SQLException err){
             System.err.println(err.getMessage());
+            return null;
         }
         finally{
             conexao.desconectar();       
-            return obj;
+            
         }
     }
 

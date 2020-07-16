@@ -1,6 +1,7 @@
 package DAO;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -12,8 +13,8 @@ public class ServicoDAO {
 	private SQLite_connection conexao = new SQLite_connection();
 
     public ServicoDAO(){
-        String sql = "create table if not exists servico ( )" +
-                "codigo int, descritivo varchar(100), valor double, tipo varchar(30), data varchar(20)";
+        String sql = "create table if not exists servico (" +
+                "codigo long, descritivo varchar(100), valor double)";
 
         try{
             if(this.conexao.conectar()){
@@ -34,13 +35,33 @@ public class ServicoDAO {
     	int cont = 0;
         try{
             if(conexao.conectar()){
-                String sql = "insert into servico(codigo,descritivo,valor,tipo,data) values(?,?,?,?,?)";
+                String sql = "insert into servico(codigo,descritivo,valor) values(?,?,?)";
                 PreparedStatement stmt = conexao.prepareStatement(sql);
                 stmt.setLong(1, obj.getCodigo());
                 stmt.setString(2, obj.getDescritivo());
-                stmt.setDouble(3, obj.getValor());
-                stmt.setString(4, obj.getTipo());
-                stmt.setString(5, obj.getData());                
+                stmt.setDouble(3, obj.getValor());                            
+                cont = stmt.executeUpdate();            }
+        } 
+        catch(SQLException err){
+            System.err.println(err.getMessage());
+        }
+        finally{
+            conexao.desconectar();
+            return cont;
+        }
+
+    }
+
+    public int alterar (Servico obj){
+    	int cont = 0;
+        try{
+            if(conexao.conectar()){
+                String sql = "update servico set codigo=?,descritivo=?,valor=? where codigo=?";
+                PreparedStatement stmt = conexao.prepareStatement(sql);
+                stmt.setLong(1, obj.getCodigo());
+                stmt.setString(2, obj.getDescritivo());
+                stmt.setDouble(3, obj.getValor()); 
+                stmt.setLong(4, obj.getCodigo());
                 cont = stmt.executeUpdate();
             }
         } 
@@ -54,14 +75,23 @@ public class ServicoDAO {
 
     }
 
-    public int alterar (Servico obj){
-		return 0;
-
-    }
-
-    public int remover (Servico obj){
-		return 0;
-
+    public int remover (int codigo){
+    	int cont = 0;
+        try{
+            if(conexao.conectar()){
+                String sql = "delete from servico where codigo=?";
+                PreparedStatement stmt = conexao.prepareStatement(sql);
+                stmt.setInt(1, codigo);
+                cont = stmt.executeUpdate();
+            }
+        } 
+        catch(SQLException err){
+            System.err.println(err.getMessage());
+        }
+        finally{
+            conexao.desconectar();
+            return cont;
+        }
     }
 
     public Servico pesquisar(int codigo){
@@ -71,7 +101,37 @@ public class ServicoDAO {
 
     public List<Servico> returnList(String search){
         List<Servico> list = new ArrayList<Servico>();
-		return list;
+        try{
+            if(conexao.conectar()){
+                PreparedStatement stmt;
+                if(search.length() > 0){          
+                    stmt = conexao.prepareStatement("select *  from servico "
+                            + "where codigo like ? order by codigo");
+                    stmt.setString(1, "%"+ search + "%");
+                } else {
+                    stmt = conexao.prepareStatement("select *  from servico "
+                            + "order by codigo");
+                }
+                ResultSet resultado = stmt.executeQuery();
+                while(resultado.next()){
+                	Servico obj = new Servico();
+                	obj.setCodigo(resultado.getLong("codigo"));
+                	obj.setDescritivo(resultado.getString("descritivo"));
+                	obj.setValor(resultado.getDouble("valor"));                	
+                    list.add(obj);
+                }
+            }
+        } 
+        catch(SQLException err){
+         System.err.println(err.getMessage());
+        }
+        catch(Exception e){
+            System.err.println(e.getMessage());
+        }
+        finally{
+            conexao.desconectar();
+            return list;
+        }				
     }
 
 }
