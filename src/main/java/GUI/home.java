@@ -115,6 +115,11 @@ public class home extends JFrame {
 	private JTextField txtValorServico;
 	private JTextField txtDescricaoServico;
 	private JTable tableServico;
+	private JTextField textCodReservaFinal;
+	private JTextField textInserirServicoFInal;
+	private JTextField txtValorTotalDiarias;
+	private JTextField txtValorTotalServico;
+	private JTextField txtValorTotalReserva;
 
 	/**
 	 * Launch the application.
@@ -456,7 +461,7 @@ public class home extends JFrame {
 		JPanel quarto = new JPanel();
 		quarto.setLayout(null);
 		quarto.setBackground(new Color(211, 211, 211));
-		quarto.setBounds(140, 0, 564, 407);
+		quarto.setBounds(140, 2, 564, 407);
 		txtNome.add(quarto);
 		
 		JLabel lblCdigoDoQuarto = new JLabel("Numero do Quarto");
@@ -666,7 +671,83 @@ public class home extends JFrame {
 		
 		tableServico = new JTable();
 		tableServico.setBounds(29, 209, 498, 187);
-		servicos.add(tableServico);
+		servicos.add(tableServico);		
+		
+		JPanel finalizar = new JPanel();
+		finalizar.setLayout(null);
+		finalizar.setBackground(new Color(211, 211, 211));
+		finalizar.setBounds(656, 418, 564, 407);
+		txtNome.add(finalizar);
+		
+		JLabel lblCodCliente_1 = new JLabel("Código da Reserva");
+		lblCodCliente_1.setBounds(10, 55, 134, 14);
+		finalizar.add(lblCodCliente_1);
+		
+		textCodReservaFinal = new JTextField();
+		textCodReservaFinal.setColumns(10);
+		textCodReservaFinal.setBounds(10, 77, 191, 20);
+		finalizar.add(textCodReservaFinal);
+		
+		JButton btnBuscarReservaFinal = new JButton("Buscar Reserva");
+		btnBuscarReservaFinal.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//busca reserva
+			}
+		});
+		btnBuscarReservaFinal.setBounds(211, 76, 134, 23);
+		finalizar.add(btnBuscarReservaFinal);
+		
+		JLabel lblFecharReserva = new JLabel("Fechar Reserva");
+		lblFecharReserva.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		lblFecharReserva.setBounds(10, 11, 216, 31);
+		finalizar.add(lblFecharReserva);
+		
+		JButton btnAdicionarServicoFinal = new JButton("Adicionar Serviço");
+		btnAdicionarServicoFinal.setBounds(211, 132, 134, 23);
+		finalizar.add(btnAdicionarServicoFinal);
+		
+		JButton btnFinalizarReserva = new JButton("Finalizar Reserva");
+		btnFinalizarReserva.setBounds(406, 77, 134, 78);
+		finalizar.add(btnFinalizarReserva);
+		
+		textInserirServicoFInal = new JTextField();
+		textInserirServicoFInal.setColumns(10);
+		textInserirServicoFInal.setBounds(10, 133, 191, 20);
+		finalizar.add(textInserirServicoFInal);
+		
+		JLabel lblCodCliente_1_1 = new JLabel("Inserir Serviço");
+		lblCodCliente_1_1.setBounds(10, 108, 134, 14);
+		finalizar.add(lblCodCliente_1_1);
+		
+		JLabel lblNewLabel_1 = new JLabel("Valor Diarias");
+		lblNewLabel_1.setBounds(10, 175, 84, 14);
+		finalizar.add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_1_1 = new JLabel("Valor Servicos");
+		lblNewLabel_1_1.setBounds(117, 175, 84, 14);
+		finalizar.add(lblNewLabel_1_1);
+		
+		JLabel lblNewLabel_1_2 = new JLabel("Valor Total");
+		lblNewLabel_1_2.setBounds(221, 175, 84, 14);
+		finalizar.add(lblNewLabel_1_2);
+		
+		txtValorTotalDiarias = new JTextField();
+		txtValorTotalDiarias.setEditable(false);
+		txtValorTotalDiarias.setColumns(10);
+		txtValorTotalDiarias.setBounds(10, 192, 84, 20);
+		finalizar.add(txtValorTotalDiarias);
+		
+		txtValorTotalServico = new JTextField();
+		txtValorTotalServico.setEditable(false);
+		txtValorTotalServico.setColumns(10);
+		txtValorTotalServico.setBounds(117, 192, 84, 20);
+		finalizar.add(txtValorTotalServico);
+		
+		txtValorTotalReserva = new JTextField();
+		txtValorTotalReserva.setEditable(false);
+		txtValorTotalReserva.setColumns(10);
+		txtValorTotalReserva.setBounds(221, 192, 84, 20);
+		finalizar.add(txtValorTotalReserva);
 		
 		///////////////////////////// BOTÕES DO MENU//////////////////////////////////////////////////////////
 
@@ -677,6 +758,7 @@ public class home extends JFrame {
 				reserva.setVisible(false);
 				quarto.setVisible(false);
 				cliente.setVisible(true);
+				finalizar.setVisible(false);
 			}
 		});
 		btnCallCliente.setBounds(10, 78, 121, 23);
@@ -689,6 +771,7 @@ public class home extends JFrame {
 				reserva.setVisible(true);
 				quarto.setVisible(false);
 				cliente.setVisible(false);
+				finalizar.setVisible(false);
 			}
 		});
 		btnCallReserva.setBounds(10, 112, 121, 23);
@@ -701,6 +784,7 @@ public class home extends JFrame {
 				reserva.setVisible(false);
 				quarto.setVisible(true);
 				cliente.setVisible(false);
+				finalizar.setVisible(false);
 			}
 		});
 		btnCallQuartos.setBounds(10, 146, 121, 23);
@@ -713,12 +797,22 @@ public class home extends JFrame {
 				reserva.setVisible(false);
 				quarto.setVisible(false);
 				cliente.setVisible(false);
+				finalizar.setVisible(false);
 			}
 		});
 		btnServicos.setBounds(10, 180, 121, 23);
 		menu.add(btnServicos);
 
 		JButton btnFecharReserva = new JButton("Fechar Reserva");
+		btnFecharReserva.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				servicos.setVisible(false);
+				reserva.setVisible(false);
+				quarto.setVisible(false);
+				cliente.setVisible(false);
+				finalizar.setVisible(true);
+			}
+		});		
 		btnFecharReserva.setBounds(10, 335, 121, 61);
 		menu.add(btnFecharReserva);
 

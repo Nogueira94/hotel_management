@@ -6,7 +6,8 @@ import java.util.List;
 public class Hospedagem extends Reserva {
     private List<Servico> gastos = new ArrayList<Servico>();
     private int diarias;
-    private double valorTotal;
+    private double valorTotal;    
+       
     
     public Hospedagem(Long codigo, String dataEntrada, String dataSaida, Cliente cliente, Double deposito, Quarto quarto) {
         super(codigo, dataEntrada, dataSaida, cliente, deposito, quarto);
@@ -16,9 +17,10 @@ public class Hospedagem extends Reserva {
         gastos.add(obj);
         calculaTotal();
     }
+        
     
     public void calculaTotal(){
-        double totalDiarias = this.diarias * this.getQuarto().getValorDiaria();
+        double totalDiarias = super.totalDiarias() * this.getQuarto().getValorDiaria();
         double totalGastos =0;
         for(Servico obj : gastos){
            totalGastos += obj.getValor();
@@ -26,10 +28,11 @@ public class Hospedagem extends Reserva {
         this.setValorTotal(totalDiarias+totalGastos);
     }
     
+        
     public void fecharConta(){
         //DAO
         calculaTotal();        
-    }
+    }       
     
     
     /**

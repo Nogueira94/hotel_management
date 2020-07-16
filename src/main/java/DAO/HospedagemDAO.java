@@ -14,7 +14,7 @@ public class HospedagemDAO {
 	private SQLite_connection conexao = new SQLite_connection();
 
     public HospedagemDAO(){
-        String sql = "create table if not exists hospedagem ( )" +
+        String sql = "create table if not exists hospedagem (" +
                 "codigo long, diarias int, valorTotal double";
 
         try{
@@ -54,23 +54,8 @@ public class HospedagemDAO {
 
     }
 
-    public int alterar (Hospedagem obj){
-		return 0;
-
-    }
-
     public int remover (Hospedagem obj){
 		return 0;
 
-    }
-
-    public Hospedagem pesquisar(int codigo){
-		return null;
-
-    }        
-
-    public List<Hospedagem> returnList(String search){
-        List<Hospedagem> list = new ArrayList<Hospedagem>();
-		return list;
     }
 }

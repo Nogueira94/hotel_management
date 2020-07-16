@@ -1,14 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fatec.hotel;
 
-/**
- *
- * @author norton
- */
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+
 public class Reserva {
     private Long codigo;
     private String dataEntrada;
@@ -16,6 +10,8 @@ public class Reserva {
     private Cliente cliente;
     private double deposito;
     private Quarto quarto;
+    
+    private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
     public Reserva(Long codigo, String dataEntrada, String dataSaida, 
             Cliente cliente, double deposito, Quarto quarto){
@@ -27,6 +23,18 @@ public class Reserva {
         this.setQuarto(quarto);
     }
     
+    public long totalDiarias() {        
+        long diff = -1;
+        try {          
+          Date dataEntrada = (Date) sdf.parse(this.dataEntrada);
+          Date dataSaida = (Date) sdf.parse(this.dataSaida); 
+          //time is always 00:00:00, so rounding should help to ignore the missing hour when going from winter to summer time, as well as the extra hour in the other direction
+          diff = Math.round((dataSaida.getTime() - dataEntrada.getTime()) / (double) 86400000);
+        } catch (Exception e) {
+          System.out.println("ERRO: DATA DE ENTRADA APÓS DATA DE SAIDA");
+        }
+        return diff;
+  }   
      
     public Reserva() {
 		// TODO Auto-generated constructor stub
