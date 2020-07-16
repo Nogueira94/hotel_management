@@ -145,7 +145,7 @@ public class home extends JFrame {
 		setTitle("HOTEL ALABAMA");		
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 710, 441);
+		setBounds(100, 100, 710, 438);
 		txtNome = new JPanel();
 		txtNome.setBackground(new Color(211, 211, 211));
 		txtNome.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -265,10 +265,43 @@ public class home extends JFrame {
 		cliente.add(lblCpfDoCliente_cliente);
 		
 		JButton btnAlterarCliente = new JButton("Alterar Cliente");
+		btnAlterarCliente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Cliente obj = new Cliente();
+				obj.setCodigo(Long.parseLong(txtCodCliente.getText()));
+				obj.setNome(txtNomeCliente.getText());
+				obj.setCpf(Integer.parseInt(txtCPFCliente.getText()));
+				obj.setDataNascimento(txtDataNascimentoCliente.getText());
+				obj.setLogradouro(txtLogradouroCliente.getText());
+				obj.setBairro(txtBairroCliente.getText());
+				obj.setCidade(txtCidadeCliente.getText());
+				obj.setEstado(txtEstadoCliente.getText());
+				obj.setTelefone(txtTelefoneCliente.getText());
+				obj.setCep(Integer.parseInt(txtCEPCliente.getText()));	
+				
+				ClienteDAO dao = new ClienteDAO();
+				   if(dao.alterar(obj)>0){
+			    	   JOptionPane.showMessageDialog(cliente, "Cliente alterado com sucesso");
+			       } else {
+			    	   JOptionPane.showMessageDialog(cliente, "ERROR");
+			       }
+			}
+		});
 		btnAlterarCliente.setBounds(412, 142, 134, 23);
 		cliente.add(btnAlterarCliente);
 		
 		JButton btnExcluirCliente = new JButton("Excluir Cliente");
+		btnExcluirCliente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int codigo = Integer.parseInt(txtCPFCliente.getText());
+				ClienteDAO dao = new ClienteDAO();
+				if (dao.remover(codigo) > 0) {									
+					JOptionPane.showMessageDialog(cliente, "Cliente removido com sucesso");
+				} else {
+					JOptionPane.showMessageDialog(cliente, "Cliente não alterado");
+				}
+			}
+		});
 		btnExcluirCliente.setBounds(412, 170, 134, 23);
 		cliente.add(btnExcluirCliente);
 		
@@ -434,10 +467,6 @@ public class home extends JFrame {
 		lblCpfDoCliente.setBounds(211, 55, 134, 14);
 		reserva.add(lblCpfDoCliente);
 		
-		JButton btnAlterarReserva = new JButton("Alterar Reserva");
-		btnAlterarReserva.setBounds(412, 142, 134, 23);
-		reserva.add(btnAlterarReserva);
-		
 		JButton btnExcluirReserva = new JButton("Excluir Reserva");
 		btnExcluirReserva.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -454,7 +483,7 @@ public class home extends JFrame {
 
 			}
 		});
-		btnExcluirReserva.setBounds(412, 170, 134, 23);
+		btnExcluirReserva.setBounds(412, 152, 134, 23);
 		reserva.add(btnExcluirReserva);		
 		
 		tableReserva = new JTable();

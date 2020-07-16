@@ -79,7 +79,7 @@ public class ClienteDAO {
                 stmt.setString(8, obj.getEstado());    
                 stmt.setString(9, obj.getTelefone()); 
                 stmt.setInt(10, obj.getCep());
-                stmt.setInt(3, obj.getCpf()); 
+                stmt.setInt(11, obj.getCpf()); 
                 cont = stmt.executeUpdate();
             }
         } 
