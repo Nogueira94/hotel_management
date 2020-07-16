@@ -158,8 +158,8 @@ public class ClienteDAO {
                 PreparedStatement stmt;
                 if(search.length() > 0){          
                     stmt = conexao.prepareStatement("select *  from cliente "
-                            + "where cpf like ? order by cpf");
-                    stmt.setString(1, "%"+ search + "%");
+                            + "where cpf = ? order by cpf");
+                    stmt.setString(1, search);
                 } else {
                     stmt = conexao.prepareStatement("select *  from cliente "
                             + "order by cpf");
