@@ -1,13 +1,10 @@
 package GUI;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
-
 import fatec.hotel.Cliente;
 import fatec.hotel.Quarto;
 import fatec.hotel.Reserva;
@@ -18,20 +15,17 @@ import DAO.ReservaDAO;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JInternalFrame;
-import javax.swing.JToggleButton;
 import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.awt.event.ActionEvent;
-import javax.swing.JList;
 import javax.swing.JTable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+@SuppressWarnings("serial")
 public class home extends JFrame {
 	
 	//////////////////////////////////////////////// CRIANDO OS MODELS PARA LISTAS //////////////////////////////////////////
@@ -101,6 +95,10 @@ public class home extends JFrame {
 	private JTable tableQuarto;
 	private JTable tableReserva;
 	private JTable tableCliente;
+	private JTextField txtCodigoServico;
+	private JTextField txtValorServico;
+	private JTextField txtDescricaoServico;
+	private JTable tableServico;
 
 	/**
 	 * Launch the application.
@@ -528,12 +526,72 @@ public class home extends JFrame {
 		tableQuarto.setBounds(29, 209, 498, 187);
 		quarto.add(tableQuarto);
 		
-		/////////////////////////////BOTÕES DO MENU//////////////////////////////////////////////////////////
-				
-				
+		
+		
+		JPanel servicos = new JPanel();
+		servicos.setLayout(null);
+		servicos.setBackground(new Color(211, 211, 211));
+		servicos.setBounds(140, 0, 564, 407);
+		txtNome.add(servicos);
+		
+		JLabel lblCodigoDoServio = new JLabel("Codigo do Serviço");
+		lblCodigoDoServio.setBounds(10, 55, 134, 14);
+		servicos.add(lblCodigoDoServio);
+		
+		txtCodigoServico = new JTextField();
+		txtCodigoServico.setColumns(10);
+		txtCodigoServico.setBounds(10, 77, 191, 20);
+		servicos.add(txtCodigoServico);
+		
+		JLabel lblValorDoServio = new JLabel("Valor do Serviço");
+		lblValorDoServio.setBounds(10, 108, 134, 14);
+		servicos.add(lblValorDoServio);
+		
+		txtValorServico = new JTextField();
+		txtValorServico.setColumns(10);
+		txtValorServico.setBounds(10, 130, 191, 20);
+		servicos.add(txtValorServico);
+		
+		JLabel lblCriaoDeServio = new JLabel("Criação de Serviço");
+		lblCriaoDeServio.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		lblCriaoDeServio.setBounds(10, 11, 216, 31);
+		servicos.add(lblCriaoDeServio);
+		
+		JButton btnBuscarServico = new JButton("Buscar Servico");
+		btnBuscarServico.setBounds(412, 104, 134, 23);
+		servicos.add(btnBuscarServico);
+		
+		txtDescricaoServico = new JTextField();
+		txtDescricaoServico.setColumns(10);
+		txtDescricaoServico.setBounds(211, 77, 191, 20);
+		servicos.add(txtDescricaoServico);
+		
+		JButton btnCadastrarServico = new JButton("Cadastrar Servico");
+		btnCadastrarServico.setBounds(412, 77, 134, 23);
+		servicos.add(btnCadastrarServico);
+		
+		JLabel lblDescrioDoServio = new JLabel("Descrição do Serviço");
+		lblDescrioDoServio.setBounds(211, 55, 134, 14);
+		servicos.add(lblDescrioDoServio);
+		
+		JButton btnAlterarServico = new JButton("Alterar Servico");
+		btnAlterarServico.setBounds(412, 129, 134, 23);
+		servicos.add(btnAlterarServico);
+		
+		JButton btnExcluirServico = new JButton("Excluir Servico");
+		btnExcluirServico.setBounds(412, 157, 134, 23);
+		servicos.add(btnExcluirServico);
+		
+		tableServico = new JTable();
+		tableServico.setBounds(29, 209, 498, 187);
+		servicos.add(tableServico);
+		
+		///////////////////////////// BOTÕES DO MENU//////////////////////////////////////////////////////////
+
 		JButton btnCallCliente = new JButton("Cliente");
 		btnCallCliente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				servicos.setVisible(false);
 				reserva.setVisible(false);
 				quarto.setVisible(false);
 				cliente.setVisible(true);
@@ -541,10 +599,11 @@ public class home extends JFrame {
 		});
 		btnCallCliente.setBounds(10, 78, 121, 23);
 		menu.add(btnCallCliente);
-		
+
 		JButton btnCallReserva = new JButton("Reserva");
 		btnCallReserva.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				servicos.setVisible(false);
 				reserva.setVisible(true);
 				quarto.setVisible(false);
 				cliente.setVisible(false);
@@ -552,10 +611,11 @@ public class home extends JFrame {
 		});
 		btnCallReserva.setBounds(10, 112, 121, 23);
 		menu.add(btnCallReserva);
-		
+
 		JButton btnCallQuartos = new JButton("Quartos");
 		btnCallQuartos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				servicos.setVisible(false);
 				reserva.setVisible(false);
 				quarto.setVisible(true);
 				cliente.setVisible(false);
@@ -563,8 +623,27 @@ public class home extends JFrame {
 		});
 		btnCallQuartos.setBounds(10, 146, 121, 23);
 		menu.add(btnCallQuartos);
-		
-		
+
+		JButton btnServicos = new JButton("Serviços");
+		btnServicos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				servicos.setVisible(true);
+				reserva.setVisible(false);
+				quarto.setVisible(false);
+				cliente.setVisible(false);
+			}
+		});
+		btnServicos.setBounds(10, 180, 121, 23);
+		menu.add(btnServicos);
+
+		JButton btnFecharReserva = new JButton("Fechar Reserva");
+		btnFecharReserva.setBounds(10, 335, 121, 61);
+		menu.add(btnFecharReserva);
+
+		JButton btnAtendente = new JButton("Atendente");
+		btnAtendente.setBounds(10, 214, 121, 23);
+		menu.add(btnAtendente);
+
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 	}
 }

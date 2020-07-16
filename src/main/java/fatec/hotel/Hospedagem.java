@@ -1,30 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package fatec.hotel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author norton
- */
 public class Hospedagem extends Reserva {
     private List<Servico> gastos = new ArrayList<Servico>();
     private int diarias;
     private double valorTotal;
-    private Nota notaFiscal;
     
     public Hospedagem(Long codigo, String dataEntrada, String dataSaida, Cliente cliente, Double deposito, Quarto quarto) {
         super(codigo, dataEntrada, dataSaida, cliente, deposito, quarto);
-    }
-
-    public void checkin(Reserva reserva){
-        Hospedagem obj = (Hospedagem)reserva;
-        //DAO
     }
     
     public void adicionarGasto(Servico obj){
@@ -43,9 +28,7 @@ public class Hospedagem extends Reserva {
     
     public void fecharConta(){
         //DAO
-        calculaTotal();
-        Nota obj = new Nota(1L, "Data Atual", this.getValorTotal());
-        this.setNotaFiscal(obj);
+        calculaTotal();        
     }
     
     
@@ -89,22 +72,6 @@ public class Hospedagem extends Reserva {
      */
     public void setValorTotal(double valorTotal) {
         this.valorTotal = valorTotal;
-    }
-
-    /**
-     * @return the notaFiscal
-     */
-    public Nota getNotaFiscal() {
-        return notaFiscal;
-    }
-
-    /**
-     * @param notaFiscal the notaFiscal to set
-     */
-    public void setNotaFiscal(Nota notaFiscal) {
-        this.notaFiscal = notaFiscal;
-    }
-    
-    
+    }    
     
 }

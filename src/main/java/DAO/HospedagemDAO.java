@@ -8,13 +8,14 @@ import java.util.List;
 
 import fatec.hotel.Hospedagem;
 
+@SuppressWarnings("finally")
 public class HospedagemDAO {
 
 	private SQLite_connection conexao = new SQLite_connection();
 
     public HospedagemDAO(){
         String sql = "create table if not exists hospedagem ( )" +
-                "codigo long, diarias int, valorTotal double, codNota long";
+                "codigo long, diarias int, valorTotal double";
 
         try{
             if(this.conexao.conectar()){
@@ -35,12 +36,11 @@ public class HospedagemDAO {
     	int cont = 0;
         try{
             if(conexao.conectar()){
-                String sql = "insert into hospedagem(codigo,diarias, valorTotal, codNota) values(?,?,?,?)";
+                String sql = "insert into hospedagem(codigo,diarias, valorTotal) values(?,?,?)";
                 PreparedStatement stmt = conexao.prepareStatement(sql);
                 stmt.setLong(1, obj.getCodigo());
                 stmt.setInt(2, obj.getDiarias());
-                stmt.setDouble(3, obj.getValorTotal());
-                stmt.setObject(4, obj.getNotaFiscal());                                
+                stmt.setDouble(3, obj.getValorTotal());                                                
                 cont = stmt.executeUpdate();
             }
         } 

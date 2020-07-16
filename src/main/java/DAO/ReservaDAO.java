@@ -78,13 +78,14 @@ public class ReservaDAO {
 
     public List<Reserva> returnList(String search){
         List<Reserva> list = new ArrayList<Reserva>();
-        Cliente c = new ClienteDAO().getClienteCpf(Integer.parseInt(search));
-		Cliente clientePesquisado;
-		clientePesquisado = c;		
+        
+        //Cliente c = new ClienteDAO().getClienteCpf(Integer.parseInt(search));
+		//Cliente clientePesquisado;
+		//clientePesquisado = c;		
 		
-		Quarto q = new QuartoDAO().isDisponivel(1);
-		Quarto quarto_disponivel;
-		quarto_disponivel=q;
+		//Quarto q = new QuartoDAO().isDisponivel(1);
+		//Quarto quarto_disponivel;
+		//quarto_disponivel=q;
 		
         try{
             if(conexao.conectar()){
@@ -103,9 +104,9 @@ public class ReservaDAO {
                 	obj.setCodigo(resultado.getLong("codigo"));
                 	obj.setDataEntrada(resultado.getString("dtEntr"));
                 	obj.setDataSaida(resultado.getString("dtSaida"));
-                	obj.setCliente(c);
+                	//obj.setCliente(c);
                 	obj.setDeposito(resultado.getDouble("deposito"));
-                	obj.setQuarto(q);                	
+                	//obj.setQuarto(q);                	
                     list.add(obj);
                 }
             }

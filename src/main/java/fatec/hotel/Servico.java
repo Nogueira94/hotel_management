@@ -12,14 +12,11 @@ package fatec.hotel;
 public class Servico {
     private long codigo;
     private String descritivo;
-    private double valor;
-    private String tipo;
-    private String data;
+    private double valor; 
     
-    public Servico(long codigo, String descritivo, double valor, String tipo){
+    public Servico(long codigo, String descritivo, double valor){
         this.setCodigo(codigo);
-        this.setDescritivo(descritivo);
-        this.setTipo(tipo);
+        this.setDescritivo(descritivo);    
         this.setValor(valor);
     }
 
@@ -63,33 +60,5 @@ public class Servico {
      */
     public void setValor(double valor) {
         this.valor = valor;
-    }
-
-    /**
-     * @return the tipo
-     */
-    public String getTipo() {
-        return tipo;
-    }
-
-    /**
-     * @param tipo the tipo to set
-     */
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
-
-    /**
-     * @return the data
-     */
-    public String getData() {
-        return data;
-    }
-
-    /**
-     * @param data the data to set
-     */
-    public void setData(String data) {
-        this.data = data;
     }
 }

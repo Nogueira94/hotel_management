@@ -7,10 +7,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import DTO.Cliente;
 import fatec.hotel.Quarto;
 
-
+@SuppressWarnings("finally")
 public class QuartoDAO {
 	
 	private SQLite_connection conexao = new SQLite_connection();
@@ -34,7 +33,8 @@ public class QuartoDAO {
         }
     }
 
-    public int inserir (Quarto obj){
+	
+	public int inserir (Quarto obj){
     	int cont = 0;
         try{
             if(conexao.conectar()){
